@@ -1,6 +1,6 @@
 # eks-cluster
 
-Production-grade EKS cluster with managed node groups, KMS secret encryption, control plane logging, OIDC-based IRSA, and API-mode access entries.
+EKS cluster with managed node groups, KMS secret encryption, control plane logging, OIDC-based IRSA, and API-mode access entries.
 
 ## Features
 

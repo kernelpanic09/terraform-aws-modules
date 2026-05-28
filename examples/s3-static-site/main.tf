@@ -23,7 +23,7 @@ provider "aws" {
 }
 
 # ---------------------------------------------------------------------------
-# Example 1: Minimal -- no WAF, no custom domain, SSE-S3 encryption.
+# Example 1: Minimal. no WAF, no custom domain, SSE-S3 encryption.
 #
 # Suitable for internal tools, preview environments, or any workload
 # where a custom domain and WAF are not yet required.
@@ -58,12 +58,12 @@ output "minimal_bucket_id" {
 }
 
 output "minimal_distribution_id" {
-  description = "CloudFront distribution ID -- use this for cache invalidations."
+  description = "CloudFront distribution ID. use this for cache invalidations."
   value       = module.static_site_minimal.cloudfront_distribution_id
 }
 
 # ---------------------------------------------------------------------------
-# Example 2: Production -- custom domain, WAF, SSE-KMS, lifecycle rules.
+# Example 2: Production. custom domain, WAF, SSE-KMS, lifecycle rules.
 #
 # Assumes the ACM certificate for example.com and www.example.com already
 # exists in us-east-1 (CloudFront requirement). The Route 53 ALIAS record
@@ -143,7 +143,7 @@ output "minimal_distribution_id" {
 # }
 #
 # ---------------------------------------------------------------------------
-# Route 53 ALIAS record -- points example.com to CloudFront.
+# Route 53 ALIAS record. points example.com to CloudFront.
 # Uncomment after enabling module.static_site_prod above.
 # ---------------------------------------------------------------------------
 #

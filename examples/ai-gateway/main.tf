@@ -6,9 +6,9 @@
 #  - WAF enabled with AWS managed rules
 #  - Alarm emails wired to an ops alias
 #  - Three API keys seeded into DynamoDB:
-#      production      -- $500/month budget, 100 RPM
-#      staging         -- $50/month budget,  30 RPM
-#      internal-tools  -- $20/month budget,  10 RPM
+#      production     . $500/month budget, 100 RPM
+#      staging        . $50/month budget,  30 RPM
+#      internal-tools . $20/month budget,  10 RPM
 #
 # Usage:
 #   terraform init

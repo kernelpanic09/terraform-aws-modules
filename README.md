@@ -1,6 +1,8 @@
 # terraform-aws-modules
 
-Production-grade Terraform modules for AWS infrastructure. Each module is self-contained, tested against Terraform 1.5+ and AWS Provider 5.x, and designed for real-world use across staging and production environments.
+A collection of opinionated Terraform modules for AWS, built around patterns I've used in real environments. These aren't generic wrappers around AWS resources. Each module captures a specific architecture (multi-region DNS failover, Okta-AWS SAML federation, ephemeral GitHub runner fleets, Bedrock-backed RAG, etc.) with the IAM, encryption, monitoring, and edge-case handling already wired in.
+
+Built against Terraform 1.5+ and AWS Provider 5.x.
 
 ## Modules
 
@@ -8,36 +10,44 @@ Production-grade Terraform modules for AWS infrastructure. Each module is self-c
 
 | Module | Description | Key Features |
 |--------|-------------|-------------|
-| [vpc](modules/vpc/) | Multi-AZ VPC with public/private subnets | NAT gateway HA or single mode, VPC Flow Logs, restricted default SG |
-| [eks-cluster](modules/eks-cluster/) | Production EKS cluster with managed node groups | OIDC/IRSA, KMS secret encryption, access entries, ALB controller + autoscaler IRSA |
-| [ecs-fargate](modules/ecs-fargate/) | ECS Fargate service behind ALB | Autoscaling, SSM secrets, circuit breaker deploys, Container Insights |
-| [s3-cloudfront](modules/s3-cloudfront/) | S3 static hosting with CloudFront CDN | OAC (not OAI), WAF with managed rules, security headers, SPA support |
-| [route53-failover](modules/route53-failover/) | Multi-region active-passive DNS failover | Health checks from multiple regions, CloudWatch alarms, composite alarm escalation |
+| [vpc](modules/vpc/) | Multi-AZ VPC with public and private subnets | HA or single NAT gateway, VPC Flow Logs, default SG locked down |
+| [eks-cluster](modules/eks-cluster/) | EKS cluster with managed node groups | OIDC/IRSA, KMS secret encryption, access entries (no more aws-auth), ALB controller + autoscaler IRSA |
+| [ecs-fargate](modules/ecs-fargate/) | ECS Fargate service behind an ALB | Autoscaling, SSM secrets, circuit breaker deploys, Container Insights |
+| [s3-cloudfront](modules/s3-cloudfront/) | S3 static hosting fronted by CloudFront | OAC (not legacy OAI), WAF with managed rules, security headers, SPA routing |
+| [route53-failover](modules/route53-failover/) | Active-passive DNS failover across regions | Health checks from multiple regions, CloudWatch alarms, composite alarm for total-outage escalation |
+| [transit-gateway](modules/transit-gateway/) | Hub-and-spoke multi-VPC networking | Per-environment route tables, association vs propagation done right, RAM share with the org, flow logs |
+| [fargate-cron](modules/fargate-cron/) | Scheduled Fargate tasks (cron jobs, not services) | EventBridge cron, DLQ for failed invocations, optional SNS alert when a task exits non-zero |
+
+### Data
+
+| Module | Description | Key Features |
+|--------|-------------|-------------|
+| [rds-aurora](modules/rds-aurora/) | Aurora cluster (Postgres or MySQL) with cross-region replica | Performance Insights, enhanced monitoring, Secrets Manager with optional rotation, CloudWatch alarms on CPU/memory/storage/connections |
 
 ### Identity and Access
 
 | Module | Description | Key Features |
 |--------|-------------|-------------|
-| [iam-roles](modules/iam-roles/) | Standard IAM role set with OIDC | GitHub Actions OIDC, MFA-gated admin, permission boundaries |
-| [okta-aws-federation](modules/okta-aws-federation/) | Okta SAML federation to AWS | Multi-provider (Okta + AWS), group-to-role mapping, auto certificate rotation |
-| [identity-center](modules/identity-center/) | AWS SSO programmatic management | Permission sets, groups, cross-account assignments as code |
+| [iam-roles](modules/iam-roles/) | Standard role set: admin, dev, read-only, CI/CD | GitHub Actions OIDC, MFA-gated admin, permission boundaries on everything but admin |
+| [okta-aws-federation](modules/okta-aws-federation/) | Okta SAML federation to AWS, end to end | Multi-provider (Okta + AWS), Okta groups mapped to IAM roles, SAML cert rotation handled automatically |
+| [identity-center](modules/identity-center/) | AWS Identity Center (SSO) managed as code | Permission sets, groups, cross-account assignments. Stops people from clicking around the SSO console |
 
 ### Foundation and Operations
 
 | Module | Description | Key Features |
 |--------|-------------|-------------|
-| [landing-zone](modules/landing-zone/) | Multi-account foundation | S3/DynamoDB state backend, CloudTrail, Config, Organizations SCPs, budget alerts |
-| [incident-response](modules/incident-response/) | Security operations pipeline | GuardDuty, Security Hub, EventBridge alerting, Lambda auto-remediation |
-| [aws-backup](modules/aws-backup/) | Centralized backup with cross-region copy | KMS encryption, vault lock (GOVERNANCE/COMPLIANCE), restore testing, SNS alerts |
-| [github-runner-fleet](modules/github-runner-fleet/) | Self-hosted GitHub Actions runners on Fargate | Ephemeral runners, Fargate Spot, webhook-driven autoscaling, HMAC verification |
+| [landing-zone](modules/landing-zone/) | Account foundation: state backend, audit, governance | S3 + DynamoDB for state, CloudTrail with KMS, AWS Config, Organizations SCPs, budget alerts |
+| [incident-response](modules/incident-response/) | GuardDuty + Security Hub with auto-remediation | EventBridge filters by severity, Lambda revokes leaked credentials and locks down public S3 / open SGs |
+| [aws-backup](modules/aws-backup/) | Centralized backup with cross-region copy | KMS encryption, vault lock (GOVERNANCE or COMPLIANCE), restore testing plans, SNS alerts on failures |
+| [github-runner-fleet](modules/github-runner-fleet/) | Self-hosted GitHub Actions runners on Fargate | Ephemeral runners, Fargate Spot, webhook-driven autoscaling, HMAC signature verification |
 
 ### AI and Bedrock
 
 | Module | Description | Key Features |
 |--------|-------------|-------------|
-| [bedrock-knowledge-base](modules/bedrock-knowledge-base/) | Full RAG infrastructure on AWS Bedrock | OpenSearch Serverless vector store, S3 data source, auto-ingestion Lambda, IAM with confused-deputy protection |
-| [ai-gateway](modules/ai-gateway/) | Production Bedrock proxy with OpenAI-compatible API | Per-key budgets and rate limits, response caching, automatic model fallback, CloudWatch dashboard, optional WAF |
-| [bedrock-guardrails](modules/bedrock-guardrails/) | Bedrock Guardrails as code for AI safety/compliance | Content filters, PII detection (BLOCK or ANONYMIZE), denied topics, regex filters, contextual grounding |
+| [bedrock-knowledge-base](modules/bedrock-knowledge-base/) | RAG infrastructure on AWS Bedrock, fully wired | OpenSearch Serverless vector store, S3 data source, Lambda auto-ingestion on upload, IAM with confused-deputy protection |
+| [ai-gateway](modules/ai-gateway/) | OpenAI-compatible proxy in front of Bedrock | Per-key budgets and rate limits, response caching, model fallback on throttle, CloudWatch dashboard, optional WAF |
+| [bedrock-guardrails](modules/bedrock-guardrails/) | Bedrock Guardrails as code | Content filters, PII detection (BLOCK or ANONYMIZE), denied topics, regex filters, contextual grounding thresholds |
 
 ## Quick Start
 
@@ -78,20 +88,24 @@ Each module has its own README with full variable and output documentation. See 
 | [bedrock-knowledge-base](examples/bedrock-knowledge-base/) | bedrock-knowledge-base | RAG setup with Titan embeddings and auto-ingestion |
 | [ai-gateway](examples/ai-gateway/) | ai-gateway | OpenAI-compatible Bedrock proxy with 3 API keys (prod/staging/internal) |
 | [bedrock-guardrails](examples/bedrock-guardrails/) | bedrock-guardrails | Production guardrails with PII, denied topics, contextual grounding |
+| [rds-aurora](examples/rds-aurora/) | rds-aurora | 3-instance Postgres cluster (1 writer + 2 readers) with Performance Insights |
+| [transit-gateway](examples/transit-gateway/) | transit-gateway | 3-VPC hub-and-spoke with centralized egress and org-wide RAM share |
+| [fargate-cron](examples/fargate-cron/) | fargate-cron | Nightly backup job with SSM secrets, DLQ, and failure alerts |
 
-## Design Principles
+## How These Are Built
 
-**Secure by default.** Default security groups deny all traffic. S3 buckets block public access. IAM roles use permission boundaries. TLS is enforced everywhere. WAF rules are available on every public-facing resource.
+A few things I try to be consistent about across modules:
 
-**Cost-aware toggles.** Every expensive resource has a feature flag. Single NAT gateway for dev, HA for prod. Fargate Spot capacity. CloudFront price classes. DynamoDB on-demand vs provisioned.
-
-**No hardcoded values.** All resource names, CIDRs, instance sizes, and feature flags are configurable through variables with validation blocks and sensible defaults.
-
-**Composable.** Modules are designed to work together. The ECS example consumes VPC outputs directly. The landing zone creates the state backend that other modules use.
+- **Secure by default.** Default security groups are locked down. S3 buckets block public access. TLS is enforced on bucket policies. Default IAM trust policies use the right `aws:SourceAccount` / `aws:SourceArn` conditions to avoid confused deputy issues.
+- **Cost toggles where it matters.** Single NAT vs HA NAT. Fargate Spot vs on-demand. CloudFront price classes. DynamoDB on-demand by default. You shouldn't need to fork a module to keep dev cheap.
+- **Variable validation everywhere.** Account IDs are checked for the 12-digit format. CIDRs run through `can(cidrhost())`. Instance classes get regex'd. Cron expressions parsed. Better to fail at `plan` than at `apply`.
+- **Composable.** Modules read each other's outputs cleanly. The ECS example pulls subnets from the VPC module. The EKS module gives back the OIDC issuer URL so you can build your own IRSA roles on top of it.
 
 ## Related Work
 
-For general-purpose, community-maintained AWS modules covering common resources (VPC, EKS, RDS, EC2, etc.), see the [terraform-aws-modules](https://github.com/terraform-aws-modules) organization. This repo is intentionally opinionated and focuses on integrations and patterns (Okta federation, Identity Center, incident response, AI/Bedrock, GitHub runner fleets) that are not well-covered by the community modules.
+If you want general-purpose, community-maintained modules for common AWS resources (VPC, EKS, RDS, EC2, etc.), go check out the [terraform-aws-modules](https://github.com/terraform-aws-modules) organization. Those are excellent and you should use them as a starting point for most stacks.
+
+This repo intentionally goes the other direction. It's opinionated and focuses on patterns and integrations that aren't well-covered elsewhere: Okta-AWS federation, Identity Center as code, GuardDuty auto-remediation, ephemeral GitHub runner fleets, Bedrock RAG, etc.
 
 ## Requirements
 
@@ -103,7 +117,7 @@ For general-purpose, community-maintained AWS modules covering common resources 
 | TLS Provider | >= 4.0 | eks-cluster only |
 | Archive Provider | >= 2.0 | incident-response, github-runner-fleet, ai-gateway, bedrock-knowledge-base |
 | Null Provider | >= 3.2 | bedrock-knowledge-base only |
-| Random Provider | latest | ai-gateway only |
+| Random Provider | >= 3.5 | ai-gateway, rds-aurora |
 
 ## Repository Structure
 
@@ -122,6 +136,9 @@ terraform-aws-modules/
 │   ├── github-runner-fleet/  # Self-hosted GitHub Actions runners on Fargate Spot
 │   ├── aws-backup/           # AWS Backup vaults, plans, cross-region copy
 │   ├── route53-failover/     # Multi-region DNS failover with health checks
+│   ├── transit-gateway/      # Hub-and-spoke multi-VPC networking
+│   ├── fargate-cron/         # Scheduled Fargate tasks via EventBridge
+│   ├── rds-aurora/           # Aurora cluster with cross-region replica
 │   ├── bedrock-knowledge-base/  # RAG: OpenSearch Serverless + S3 + Bedrock
 │   ├── ai-gateway/           # OpenAI-compatible proxy to Bedrock with caching
 │   └── bedrock-guardrails/   # Content filters, PII, denied topics, grounding
@@ -140,7 +157,10 @@ terraform-aws-modules/
 │   ├── route53-failover/
 │   ├── bedrock-knowledge-base/
 │   ├── ai-gateway/
-│   └── bedrock-guardrails/
+│   ├── bedrock-guardrails/
+│   ├── rds-aurora/
+│   ├── transit-gateway/
+│   └── fargate-cron/
 ├── LICENSE
 └── README.md
 ```

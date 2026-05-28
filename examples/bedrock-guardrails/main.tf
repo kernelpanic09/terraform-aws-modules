@@ -117,7 +117,7 @@ module "production_guardrail" {
   #              without retaining real values.
   # ---------------------------------------------------------------------------
   pii_entities = [
-    # Credentials -- always block
+    # Credentials. always block
     { type = "US_SOCIAL_SECURITY_NUMBER", action = "BLOCK" },
     { type = "CREDIT_DEBIT_CARD_NUMBER",  action = "BLOCK" },
     { type = "CREDIT_DEBIT_CARD_CVV",     action = "BLOCK" },
@@ -127,12 +127,12 @@ module "production_guardrail" {
     { type = "PASSWORD",                  action = "BLOCK" },
     { type = "PIN",                       action = "BLOCK" },
 
-    # Contact and identity -- anonymize
+    # Contact and identity. anonymize
     { type = "NAME",  action = "ANONYMIZE" },
     { type = "EMAIL", action = "ANONYMIZE" },
     { type = "PHONE", action = "ANONYMIZE" },
 
-    # Additional financial identifiers -- anonymize
+    # Additional financial identifiers. anonymize
     { type = "US_BANK_ACCOUNT_NUMBER",    action = "ANONYMIZE" },
     { type = "US_BANK_ROUTING_NUMBER",    action = "ANONYMIZE" },
     { type = "INTERNATIONAL_BANK_ACCOUNT_NUMBER", action = "ANONYMIZE" },
@@ -200,8 +200,8 @@ module "production_guardrail" {
 
   # ---------------------------------------------------------------------------
   # Contextual grounding: enforce response accuracy for RAG use cases
-  #   grounding_threshold = 0.7 -- blocks responses poorly grounded in sources
-  #   relevance_threshold = 0.8 -- blocks responses that drift from the query
+  #   grounding_threshold = 0.7. blocks responses poorly grounded in sources
+  #   relevance_threshold = 0.8. blocks responses that drift from the query
   # ---------------------------------------------------------------------------
   contextual_grounding = {
     grounding_threshold = 0.7

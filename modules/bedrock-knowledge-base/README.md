@@ -1,6 +1,6 @@
 # bedrock-knowledge-base
 
-Terraform module that provisions a production-grade AWS Bedrock Knowledge Base backed by OpenSearch Serverless for vector storage and S3 for document ingestion.
+Terraform module that provisions a AWS Bedrock Knowledge Base backed by OpenSearch Serverless for vector storage and S3 for document ingestion.
 
 ## Architecture
 
@@ -41,7 +41,7 @@ OpenSearch Serverless does not have a native Terraform resource for index creati
 
 1. The AWS CLI installed and configured (or environment variables `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and optionally `AWS_SESSION_TOKEN` set).
 2. `curl` 7.75 or later (preferred) OR Python 3 with `boto3` installed (used as a fallback).
-3. IAM permissions to call `aoss:APIAccessAll` on the collection -- typically the same credentials used for the rest of the Terraform run.
+3. IAM permissions to call `aoss:APIAccessAll` on the collection. typically the same credentials used for the rest of the Terraform run.
 
 The `null_resource` is idempotent: if the index already exists it logs a message and exits without error. To force recreation of the index, taint the resource:
 
@@ -186,7 +186,7 @@ When `enable_auto_ingestion = true`, an S3 event notification triggers a Lambda 
 - The S3 bucket enforces HTTPS-only access via a bucket policy `Deny` on `aws:SecureTransport = false`.
 - The Bedrock service role trust policy uses `aws:SourceAccount` and `aws:SourceArn` conditions to prevent confused-deputy attacks.
 - The S3 bucket policy restricts Bedrock access to the current account and knowledge bases in the current region.
-- OpenSearch collection access is controlled by both the network policy (endpoint exposure) and the data access policy (IAM-based authorization). The network policy uses `AllowFromPublic: true` so the Bedrock service can reach the endpoint -- access is still gated by the data access policy. For stricter isolation, configure a VPC endpoint and update the network policy accordingly.
+- OpenSearch collection access is controlled by both the network policy (endpoint exposure) and the data access policy (IAM-based authorization). The network policy uses `AllowFromPublic: true` so the Bedrock service can reach the endpoint. access is still gated by the data access policy. For stricter isolation, configure a VPC endpoint and update the network policy accordingly.
 
 ## Limitations
 

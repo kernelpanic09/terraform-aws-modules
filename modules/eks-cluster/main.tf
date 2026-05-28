@@ -104,7 +104,7 @@ resource "aws_iam_role_policy_attachment" "cluster_AmazonEKSVPCResourceControlle
 }
 
 # ------------------------------------------------------------------------------
-# Cluster security group (primary, managed by EKS) -- extra rules
+# Cluster security group (primary, managed by EKS). extra rules
 # ------------------------------------------------------------------------------
 
 # EKS creates a "cluster security group" automatically. We add rules for

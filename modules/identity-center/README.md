@@ -5,13 +5,13 @@ Manages the full AWS IAM Identity Center configuration as Terraform code. Most o
 ## Why This Matters
 
 - **Audit trail**: every access change is a git commit with author and timestamp
-- **Consistency**: permission sets are defined once and reused across accounts -- no drift between environments
+- **Consistency**: permission sets are defined once and reused across accounts. no drift between environments
 - **Speed**: granting a new team access to three accounts is a two-line change, not fifteen console clicks
 - **Compliance**: policies-as-code integrate naturally with OPA/Conftest or custom CI checks
 
 ## Prerequisites
 
-1. **AWS IAM Identity Center must already be enabled** in your AWS organization. Identity Center is a singleton per organization and cannot be created via Terraform -- this module references the existing instance.
+1. **AWS IAM Identity Center must already be enabled** in your AWS organization. Identity Center is a singleton per organization and cannot be created via Terraform. this module references the existing instance.
 2. **Run this module from the management account** or from a delegated administrator account for IAM Identity Center.
 3. The AWS provider must be configured with credentials that have sufficient permissions to manage Identity Center resources (`sso:*`, `identitystore:*`).
 
@@ -32,7 +32,7 @@ module "identity_center" {
     },
     {
       name             = "Developer"
-      description      = "Developer access -- read/write to most services, no IAM or billing"
+      description      = "Developer access. read/write to most services, no IAM or billing"
       session_duration = "PT8H"
       managed_policy_arns = [
         "arn:aws:iam::aws:policy/PowerUserAccess"
@@ -66,7 +66,7 @@ module "identity_center" {
   groups = [
     {
       name        = "platform-admins"
-      description = "Platform engineering team -- full admin"
+      description = "Platform engineering team. full admin"
     },
     {
       name        = "developers"
@@ -120,7 +120,7 @@ The resulting key for each assignment is `<group>-<permission_set>-<account_id>`
 
 ### Adding a new team member
 
-Members are added to Identity Center groups via the console or your IdP (Okta, Azure AD, etc.). Terraform manages the groups and their access -- individual user membership is managed separately (or automatically via SCIM provisioning if you have an external IdP connected).
+Members are added to Identity Center groups via the console or your IdP (Okta, Azure AD, etc.). Terraform manages the groups and their access. individual user membership is managed separately (or automatically via SCIM provisioning if you have an external IdP connected).
 
 ### Granting a team access to a new account
 

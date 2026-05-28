@@ -1,6 +1,6 @@
 # aws-backup
 
-Terraform module that creates a production-grade AWS Backup configuration.
+Terraform module for a AWS Backup configuration.
 
 ## Features
 
@@ -110,8 +110,8 @@ module "backup" {
 
 The module declares two provider configurations internally:
 
-- `aws` -- default, used for all primary region resources
-- `aws.replica` -- alias required by the caller; used only when `enable_cross_region_copy = true`
+- `aws`. default, used for all primary region resources
+- `aws.replica`. alias required by the caller; used only when `enable_cross_region_copy = true`
 
 The `aws.replica` provider alias must always be passed in the `providers` map
 even when `enable_cross_region_copy = false`, because Terraform evaluates

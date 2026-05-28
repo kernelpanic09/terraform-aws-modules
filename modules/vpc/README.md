@@ -1,6 +1,6 @@
 # terraform-aws-vpc
 
-A production-grade Terraform module that provisions a fully featured AWS VPC with public and private subnets across multiple availability zones. Designed for environments where high availability, security hardening, and operational observability are required from day one.
+Terraform module for a fully featured AWS VPC with public and private subnets across multiple availability zones. Designed for environments where high availability, security hardening, and operational observability are required from day one.
 
 ## Usage
 

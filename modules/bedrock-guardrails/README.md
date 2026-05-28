@@ -1,27 +1,27 @@
 # bedrock-guardrails
 
-A production-grade Terraform module that provisions an AWS Bedrock Guardrail
+Terraform module for an AWS Bedrock Guardrail
 with a full complement of content safety and compliance controls.
 
 ## Features
 
-- **Content policy filters** -- Configurable strength (NONE / LOW / MEDIUM / HIGH) on
+- **Content policy filters**. Configurable strength (NONE / LOW / MEDIUM / HIGH) on
   input and output for: SEXUAL, VIOLENCE, HATE, INSULTS, MISCONDUCT, PROMPT_ATTACK.
-- **PII detection** -- Per-entity-type actions (BLOCK or ANONYMIZE) for 30+ PII types
+- **PII detection**. Per-entity-type actions (BLOCK or ANONYMIZE) for 30+ PII types
   including SSN, credit card numbers, cloud credentials, and more.
-- **Custom regex filters** -- RE2-compatible patterns to detect organisation-specific
+- **Custom regex filters**. RE2-compatible patterns to detect organisation-specific
   sensitive data (employee IDs, internal codes, etc.).
-- **Denied topics** -- Natural-language topic definitions with optional examples
+- **Denied topics**. Natural-language topic definitions with optional examples
   that Bedrock uses to train an inline topic classifier.
-- **Word filters** -- Custom word/phrase blocklist combined with the AWS-managed
+- **Word filters**. Custom word/phrase blocklist combined with the AWS-managed
   PROFANITY managed word list.
-- **Contextual grounding** -- Grounding and relevance thresholds for RAG and
+- **Contextual grounding**. Grounding and relevance thresholds for RAG and
   summarisation use cases to reduce hallucinations.
-- **Immutable versioning** -- Optional `aws_bedrock_guardrail_version` snapshot that
+- **Immutable versioning**. Optional `aws_bedrock_guardrail_version` snapshot that
   replaces itself whenever the DRAFT guardrail changes.
-- **IAM policy document output** -- Rendered JSON that callers can attach to roles;
+- **IAM policy document output**. Rendered JSON that callers can attach to roles;
   no IAM resources are created inside the module.
-- **KMS encryption** -- Optional customer-managed KMS key for guardrail config at rest.
+- **KMS encryption**. Optional customer-managed KMS key for guardrail config at rest.
 
 ## Usage
 

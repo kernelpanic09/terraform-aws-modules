@@ -1,5 +1,5 @@
 # ============================================================
-# ai-gateway module -- main.tf
+# ai-gateway module. main.tf
 # ============================================================
 
 locals {
@@ -36,7 +36,7 @@ resource "aws_kms_alias" "main" {
 # DynamoDB tables
 # ============================================================
 
-# API Keys table -- stores key metadata and budget counters
+# API Keys table. stores key metadata and budget counters
 resource "aws_dynamodb_table" "api_keys" {
   name         = "${local.prefix}-api-keys"
   billing_mode = "PAY_PER_REQUEST"
@@ -59,7 +59,7 @@ resource "aws_dynamodb_table" "api_keys" {
   tags = local.common_tags
 }
 
-# Rate counter table -- per-key per-minute atomic counter
+# Rate counter table. per-key per-minute atomic counter
 resource "aws_dynamodb_table" "rate_counter" {
   name         = "${local.prefix}-rate-counter"
   billing_mode = "PAY_PER_REQUEST"
@@ -83,7 +83,7 @@ resource "aws_dynamodb_table" "rate_counter" {
   tags = local.common_tags
 }
 
-# Cost log table -- per-request cost records
+# Cost log table. per-request cost records
 resource "aws_dynamodb_table" "cost_log" {
   name         = "${local.prefix}-cost-log"
   billing_mode = "PAY_PER_REQUEST"
@@ -129,7 +129,7 @@ resource "aws_dynamodb_table" "cost_log" {
   tags = local.common_tags
 }
 
-# Prompt cache table -- SHA-256 keyed response cache
+# Prompt cache table. SHA-256 keyed response cache
 resource "aws_dynamodb_table" "prompt_cache" {
   name         = "${local.prefix}-prompt-cache"
   billing_mode = "PAY_PER_REQUEST"
@@ -203,7 +203,7 @@ data "aws_iam_policy_document" "proxy_lambda" {
     ]
   }
 
-  # Bedrock model invocation -- all models in the chain
+  # Bedrock model invocation. all models in the chain
   statement {
     effect  = "Allow"
     actions = ["bedrock:InvokeModel"]
@@ -357,7 +357,7 @@ resource "aws_cloudwatch_log_group" "authorizer" {
 }
 
 # Inline authorizer: validates key and returns IAM policy
-# Packaged from the same source dir -- handler_authorizer.py
+# Packaged from the same source dir. handler_authorizer.py
 locals {
   authorizer_src = "${path.module}/lambda/authorizer"
 }
@@ -526,7 +526,7 @@ resource "aws_apigatewayv2_authorizer" "main" {
   authorizer_uri                    = aws_lambda_function.authorizer.invoke_arn
   identity_sources                  = ["$request.header.Authorization", "$request.header.X-Api-Key"]
   name                              = "${local.prefix}-authorizer"
-  authorizer_result_ttl_in_seconds  = 0  # no caching of auth results -- enforce fresh checks
+  authorizer_result_ttl_in_seconds  = 0  # no caching of auth results. enforce fresh checks
   enable_simple_responses           = false
 }
 
@@ -582,7 +582,7 @@ resource "aws_wafv2_web_acl" "main" {
     }
   }
 
-  # AWS Managed Rules -- Core rule set
+  # AWS Managed Rules. Core rule set
   rule {
     name     = "AWSManagedRulesCommonRuleSet"
     priority = 2
@@ -605,7 +605,7 @@ resource "aws_wafv2_web_acl" "main" {
     }
   }
 
-  # AWS Managed Rules -- Known bad inputs
+  # AWS Managed Rules. Known bad inputs
   rule {
     name     = "AWSManagedRulesKnownBadInputsRuleSet"
     priority = 3
@@ -772,7 +772,7 @@ resource "aws_cloudwatch_metric_alarm" "lambda_duration" {
 # Rate limit exceeded alarm
 resource "aws_cloudwatch_metric_alarm" "rate_limit_exceeded" {
   alarm_name          = "${local.prefix}-rate-limit-exceeded"
-  alarm_description   = "Multiple rate limit violations -- possible abuse or misconfigured client"
+  alarm_description   = "Multiple rate limit violations. possible abuse or misconfigured client"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 1
   threshold           = 50
@@ -794,7 +794,7 @@ resource "aws_cloudwatch_dashboard" "main" {
 
   dashboard_body = jsonencode({
     widgets = [
-      # Row 1 -- Traffic overview
+      # Row 1. Traffic overview
       {
         type   = "metric"
         x      = 0
@@ -842,7 +842,7 @@ resource "aws_cloudwatch_dashboard" "main" {
           view = "timeSeries"
         }
       },
-      # Row 2 -- Cost and model usage
+      # Row 2. Cost and model usage
       {
         type   = "metric"
         x      = 0
@@ -873,7 +873,7 @@ resource "aws_cloudwatch_dashboard" "main" {
           view = "timeSeries"
         }
       },
-      # Row 3 -- Lambda performance
+      # Row 3. Lambda performance
       {
         type   = "metric"
         x      = 0

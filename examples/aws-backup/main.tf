@@ -26,7 +26,7 @@ terraform {
   }
 }
 
-# Primary region -- all main resources land here.
+# Primary region. all main resources land here.
 provider "aws" {
   region = "us-east-1"
 
@@ -39,7 +39,7 @@ provider "aws" {
   }
 }
 
-# Replica provider alias -- must be present even if you later disable
+# Replica provider alias. must be present even if you later disable
 # cross-region copy (Terraform resolves provider references statically).
 provider "aws" {
   alias  = "replica"
@@ -77,7 +77,7 @@ module "backup" {
   enable_cross_region_copy = true
   replica_region           = "us-west-2"
 
-  # ---- Vault lock (GOVERNANCE mode -- safe to remove if needed) --------------
+  # ---- Vault lock (GOVERNANCE mode. safe to remove if needed) --------------
   enable_vault_lock              = true
   vault_lock_mode                = "GOVERNANCE"
   vault_lock_min_retention_days  = 7

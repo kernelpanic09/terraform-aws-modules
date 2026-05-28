@@ -1,6 +1,6 @@
 # terraform-aws-s3-cloudfront
 
-A production-grade Terraform module that provisions a secure, globally distributed static
+Terraform module for a secure, globally distributed static
 site on AWS using S3 and CloudFront with Origin Access Control (OAC). Optional WAF
 protection and custom domain support are included.
 

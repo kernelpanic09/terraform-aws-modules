@@ -1,6 +1,6 @@
 # terraform-aws-ecs-fargate
 
-A production-grade Terraform module that provisions a complete ECS Fargate service behind an Application Load Balancer. Every resource is tagged, security-hardened, and structured for day-2 operations.
+Terraform module for a complete ECS Fargate service behind an Application Load Balancer. Every resource is tagged, security-hardened, and structured for day-2 operations.
 
 ## Architecture
 

@@ -1,6 +1,6 @@
 # route53-failover
 
-A production-grade Terraform module that implements active-passive multi-region DNS failover using Route53 failover routing policy, health checks, CloudWatch alarms, SNS notifications, and EventBridge event forwarding.
+A Terraform module that implements active-passive multi-region DNS failover using Route53 failover routing policy, health checks, CloudWatch alarms, SNS notifications, and EventBridge event forwarding.
 
 ## Architecture
 

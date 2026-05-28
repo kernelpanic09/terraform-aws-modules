@@ -49,7 +49,7 @@ resource "aws_route53_health_check" "primary" {
   regions = var.health_check_regions
 
   # CloudWatch metrics for Route53 health checks are automatically published
-  # to us-east-1. No attribute is required here -- the metrics appear under
+  # to us-east-1. No attribute is required here. the metrics appear under
   # the AWS/Route53 namespace with the HealthCheckId dimension.
 
   tags = merge(local.common_tags, {
@@ -78,7 +78,7 @@ resource "aws_route53_health_check" "secondary" {
   })
 }
 
-# Calculated health check -- optional. Aggregates primary + secondary into a
+# Calculated health check. optional. Aggregates primary + secondary into a
 # single health check resource useful for dashboards and escalation alarms.
 resource "aws_route53_health_check" "calculated" {
   count = var.enable_calculated_health_check ? 1 : 0
@@ -98,7 +98,7 @@ resource "aws_route53_health_check" "calculated" {
 }
 
 # ---------------------------------------------------------------------------
-# Route53 DNS records -- A (and optionally AAAA)
+# Route53 DNS records. A (and optionally AAAA)
 # ---------------------------------------------------------------------------
 
 # Primary A record (active)
@@ -176,7 +176,7 @@ resource "aws_route53_record" "secondary_aaaa" {
 }
 
 # ---------------------------------------------------------------------------
-# SNS topic for notifications (us-east-1 -- co-located with CloudWatch alarms)
+# SNS topic for notifications (us-east-1. co-located with CloudWatch alarms)
 # ---------------------------------------------------------------------------
 
 resource "aws_sns_topic" "failover" {
@@ -200,7 +200,7 @@ resource "aws_sns_topic_subscription" "email" {
 }
 
 # ---------------------------------------------------------------------------
-# CloudWatch alarms (must be in us-east-1 -- Route53 hardcodes metrics there)
+# CloudWatch alarms (must be in us-east-1. Route53 hardcodes metrics there)
 # ---------------------------------------------------------------------------
 
 # Alarm: primary endpoint health check failed
@@ -235,7 +235,7 @@ resource "aws_cloudwatch_metric_alarm" "primary_health_check" {
   })
 }
 
-# Alarm: secondary endpoint health check failed (warning -- not yet a full outage)
+# Alarm: secondary endpoint health check failed (warning. not yet a full outage)
 resource "aws_cloudwatch_metric_alarm" "secondary_health_check" {
   count    = var.enable_alarms ? 1 : 0
   provider = aws.us_east_1

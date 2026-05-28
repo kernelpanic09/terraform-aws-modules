@@ -179,7 +179,7 @@ module "identity_center" {
   #
   # Each entry is a group + permission set + list of account IDs.
   # The module flattens these into individual (group, permission_set, account)
-  # triples -- each a separate aws_ssoadmin_account_assignment resource.
+  # triples. each a separate aws_ssoadmin_account_assignment resource.
   ##############################################################################
 
   account_assignments = [

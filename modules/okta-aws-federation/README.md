@@ -1,6 +1,6 @@
 # okta-aws-federation
 
-Automates the complete Okta-to-AWS SAML federation setup that most organizations configure manually through the console. The module creates an Okta SAML application, an AWS IAM SAML Identity Provider seeded from Okta's live metadata, and one IAM role and Okta group per logical access tier -- all wired together so Okta group membership drives AWS role assumption with no additional configuration.
+Automates the complete Okta-to-AWS SAML federation setup that most organizations configure manually through the console. The module creates an Okta SAML application, an AWS IAM SAML Identity Provider seeded from Okta's live metadata, and one IAM role and Okta group per logical access tier. all wired together so Okta group membership drives AWS role assumption with no additional configuration.
 
 ## Prerequisites
 
@@ -75,7 +75,7 @@ When a user signs into AWS via Okta SSO, Okta constructs a SAML assertion contai
 | `SessionDuration` | `var.session_duration` | Maximum length of the assumed-role session |
 | `Role` | Okta group profile | Comma-separated `<role_arn>,<idp_arn>` pair that tells AWS which role to assume |
 
-The `Role` attribute is populated from the Okta group's profile field. This module sets each group's profile to `"<role_arn>,<saml_provider_arn>"` -- the exact format AWS requires. The `filter_type = "STARTS_WITH"` on the Role attribute statement ensures only groups matching `var.okta_group_prefix` are included, preventing unrelated groups from leaking into the assertion.
+The `Role` attribute is populated from the Okta group's profile field. This module sets each group's profile to `"<role_arn>,<saml_provider_arn>"`. the exact format AWS requires. The `filter_type = "STARTS_WITH"` on the Role attribute statement ensures only groups matching `var.okta_group_prefix` are included, preventing unrelated groups from leaking into the assertion.
 
 Assigning a user to (for example) the `aws-developer` Okta group grants them the ability to assume the `developer` IAM role in AWS when they sign in through the Okta tile. Removing them from the group immediately revokes that access.
 
@@ -123,4 +123,4 @@ Assigning a user to (for example) the `aws-developer` Okta group grants them the
 
 **SAML audience restriction**: The trust policy enforces `"SAML:aud" = "https://signin.aws.amazon.com/saml"`. This ensures the SAML assertion can only be used against the AWS SAML endpoint and cannot be replayed to other service providers.
 
-**Metadata refresh**: The `okta_app_saml.aws.metadata` attribute is live -- Terraform will detect and apply changes if Okta rotates its signing certificate. Run `terraform apply` as part of certificate rotation runbooks to keep the IAM SAML provider in sync.
+**Metadata refresh**: The `okta_app_saml.aws.metadata` attribute is live. Terraform will detect and apply changes if Okta rotates its signing certificate. Run `terraform apply` as part of certificate rotation runbooks to keep the IAM SAML provider in sync.

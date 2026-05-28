@@ -1,6 +1,6 @@
 # github-runner-fleet
 
-A production-grade Terraform module that provisions an ephemeral, auto-scaling GitHub Actions self-hosted runner fleet on AWS ECS Fargate.
+Terraform module for an ephemeral, auto-scaling GitHub Actions self-hosted runner fleet on AWS ECS Fargate.
 
 Runners are ephemeral: each container registers with GitHub, executes exactly one job, then exits. The ECS service scales up on `workflow_job` webhook events and scales back to zero (or to `min_runners`) as tasks complete naturally.
 

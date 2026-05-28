@@ -1,6 +1,6 @@
 # ai-gateway Terraform Module
 
-A production-grade OpenAI-compatible proxy for AWS Bedrock. Drop it into any AWS account, point your OpenAI SDK clients at the output URL, and get rate limiting, cost accounting, prompt caching, model fallback, and observability out of the box.
+A OpenAI-compatible proxy for AWS Bedrock. Drop it into any AWS account, point your OpenAI SDK clients at the output URL, and get rate limiting, cost accounting, prompt caching, model fallback, and observability out of the box.
 
 ## Architecture
 
@@ -18,13 +18,13 @@ API Gateway HTTP API
         | (validates API key in DynamoDB api_keys table)
         v
 Lambda proxy function
-  1. authorize_request()    -- DynamoDB api_keys lookup
-  2. check_rate_limit()     -- atomic counter in DynamoDB rate_counter (per-minute TTL)
-  3. check_budget()         -- monthly_budget vs used_this_month
-  4. get_cached_response()  -- SHA-256 keyed DynamoDB prompt_cache (optional)
-  5. invoke_with_fallback() -- primary model -> fallback[0] -> fallback[1]
-  6. calculate_cost()       -- token * per-model pricing
-  7. record_usage()         -- DynamoDB cost_log + budget increment
+  1. authorize_request()   . DynamoDB api_keys lookup
+  2. check_rate_limit()    . atomic counter in DynamoDB rate_counter (per-minute TTL)
+  3. check_budget()        . monthly_budget vs used_this_month
+  4. get_cached_response() . SHA-256 keyed DynamoDB prompt_cache (optional)
+  5. invoke_with_fallback(). primary model -> fallback[0] -> fallback[1]
+  6. calculate_cost()      . token * per-model pricing
+  7. record_usage()        . DynamoDB cost_log + budget increment
   8. format_openai_response()
         |
         v
@@ -32,24 +32,24 @@ AWS Bedrock (Claude, Llama, Titan)
         |
 CloudWatch (metrics, alarms, dashboard)
 SNS (alarm emails)
-WAF (optional -- rate limiting + managed rules)
+WAF (optional. rate limiting + managed rules)
 KMS (DynamoDB encryption at rest)
 ```
 
 ## Features
 
-- **OpenAI-compatible API** -- clients using `openai.OpenAI(base_url=..., api_key=...)` work without code changes
-- **API key authentication** -- Bearer token or `X-Api-Key` header, validated by a separate authorizer Lambda
-- **Per-key rate limiting** -- per-minute sliding window using DynamoDB atomic ADD + TTL; returns HTTP 429 on breach
-- **Per-key monthly budget** -- denies requests when `used_this_month >= monthly_budget`; returns HTTP 403
-- **Prompt caching** -- SHA-256(model + messages + params) keyed, configurable TTL, dramatically reduces cost for repeated queries
-- **Model fallback chain** -- on `ThrottlingException` the proxy advances to fallback models in order
-- **Cost accounting** -- per-model token pricing baked in; every invocation is recorded to DynamoDB and the monthly counter is updated atomically
-- **CloudWatch dashboard** -- total requests, cache hit/miss, daily cost, per-model usage, Lambda duration percentiles, throttling events
-- **CloudWatch alarms** -- high error rate, Bedrock throttling, Lambda errors, Lambda P99 duration, rate limit abuse
-- **WAF v2 (optional)** -- per-IP rate limiting + AWS Managed Rules (CRS + known bad inputs)
-- **KMS encryption** -- all DynamoDB tables encrypted with a customer-managed KMS key with automatic rotation
-- **X-Ray tracing** -- active tracing on the proxy Lambda
+- **OpenAI-compatible API**. clients using `openai.OpenAI(base_url=..., api_key=...)` work without code changes
+- **API key authentication**. Bearer token or `X-Api-Key` header, validated by a separate authorizer Lambda
+- **Per-key rate limiting**. per-minute sliding window using DynamoDB atomic ADD + TTL; returns HTTP 429 on breach
+- **Per-key monthly budget**. denies requests when `used_this_month >= monthly_budget`; returns HTTP 403
+- **Prompt caching**. SHA-256(model + messages + params) keyed, configurable TTL, dramatically reduces cost for repeated queries
+- **Model fallback chain**. on `ThrottlingException` the proxy advances to fallback models in order
+- **Cost accounting**. per-model token pricing baked in; every invocation is recorded to DynamoDB and the monthly counter is updated atomically
+- **CloudWatch dashboard**. total requests, cache hit/miss, daily cost, per-model usage, Lambda duration percentiles, throttling events
+- **CloudWatch alarms**. high error rate, Bedrock throttling, Lambda errors, Lambda P99 duration, rate limit abuse
+- **WAF v2 (optional)**. per-IP rate limiting + AWS Managed Rules (CRS + known bad inputs)
+- **KMS encryption**. all DynamoDB tables encrypted with a customer-managed KMS key with automatic rotation
+- **X-Ray tracing**. active tracing on the proxy Lambda
 
 ## Supported Models
 
@@ -325,13 +325,13 @@ aws dynamodb scan \
 
 ## Security Considerations
 
-- API keys are stored in DynamoDB, not in environment variables or SSM -- keys are only in transit during the API call.
+- API keys are stored in DynamoDB, not in environment variables or SSM. keys are only in transit during the API call.
 - The authorizer Lambda result TTL is set to 0 to prevent stale allow decisions from a recently revoked key being cached by API Gateway.
 - All DynamoDB tables use customer-managed KMS keys with automatic rotation.
 - CloudWatch log groups are also encrypted with the same KMS key.
 - WAF managed rules protect against common web exploits and known bad inputs.
 - The Lambda execution role follows least-privilege: `bedrock:InvokeModel` is scoped to the specific model ARNs in the fallback chain.
-- Budget enforcement happens inside the proxy Lambda AFTER the authorizer -- a revoked key cannot bypass the budget check.
+- Budget enforcement happens inside the proxy Lambda AFTER the authorizer. a revoked key cannot bypass the budget check.
 
 ## Cost Estimation
 
@@ -340,7 +340,7 @@ For 1 million requests per month to Claude Haiku 4 (avg 500 input + 200 output t
 | Component | Estimated Cost |
 |---|---|
 | API Gateway HTTP API | ~$1.00 |
-| Lambda invocations (2x per request -- authorizer + proxy) | ~$4.00 |
+| Lambda invocations (2x per request. authorizer + proxy) | ~$4.00 |
 | DynamoDB (PAY_PER_REQUEST) | ~$5.00 |
 | CloudWatch Logs | ~$2.00 |
 | Bedrock Claude Haiku (500 in + 200 out tokens * 1M) | ~$1,200 |

@@ -37,7 +37,7 @@ locals {
 }
 
 # ------------------------------------------------------------------------------
-# KMS key -- primary vault encryption
+# KMS key. primary vault encryption
 # ------------------------------------------------------------------------------
 
 resource "aws_kms_key" "backup" {
@@ -94,7 +94,7 @@ resource "aws_kms_alias" "backup" {
 }
 
 # ------------------------------------------------------------------------------
-# KMS key -- replica vault encryption (created in replica region)
+# KMS key. replica vault encryption (created in replica region)
 # ------------------------------------------------------------------------------
 
 resource "aws_kms_key" "replica" {
@@ -158,7 +158,7 @@ resource "aws_backup_vault" "primary" {
 }
 
 # ------------------------------------------------------------------------------
-# Vault lock -- primary vault
+# Vault lock. primary vault
 # ------------------------------------------------------------------------------
 
 resource "aws_backup_vault_lock_configuration" "primary" {
@@ -399,7 +399,7 @@ resource "aws_backup_plan" "this" {
         delete_after       = rule.value.delete_after_days
       }
 
-      # Cross-region copy action -- only emitted when the rule opts in and
+      # Cross-region copy action. only emitted when the rule opts in and
       # cross-region copy is globally enabled.
       dynamic "copy_action" {
         for_each = (
@@ -429,7 +429,7 @@ resource "aws_backup_plan" "this" {
 # Backup selections
 # A single selection resource is created per plan, covering both tag-based and
 # explicit-ARN-based resources. If the caller supplies neither, no selection is
-# created (the plan exists but selects nothing -- valid for manual assignments).
+# created (the plan exists but selects nothing. valid for manual assignments).
 # ------------------------------------------------------------------------------
 
 locals {
@@ -449,7 +449,7 @@ resource "aws_backup_selection" "this" {
   # Explicit ARN list (may include wildcards).
   resources = length(var.selection_resources) > 0 ? var.selection_resources : null
 
-  # Tag-based conditions -- all tags must match (AND logic).
+  # Tag-based conditions. all tags must match (AND logic).
   dynamic "selection_tag" {
     for_each = var.selection_tags
 
@@ -462,7 +462,7 @@ resource "aws_backup_selection" "this" {
 }
 
 # ------------------------------------------------------------------------------
-# Restore testing plan (AWS Backup Restore Testing -- GA 2024)
+# Restore testing plan (AWS Backup Restore Testing. GA 2024)
 # ------------------------------------------------------------------------------
 
 resource "aws_backup_restore_testing_plan" "this" {

@@ -128,7 +128,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "this" {
 }
 
 # ------------------------------------------------------------------------------
-# Bucket Policy -- CloudFront OAC Only
+# Bucket Policy. CloudFront OAC Only
 #
 # The bucket is not publicly accessible. CloudFront presents its service
 # principal (cloudfront.amazonaws.com) with a condition on the distribution
@@ -198,7 +198,7 @@ resource "aws_cloudfront_origin_access_control" "this" {
 }
 
 # ------------------------------------------------------------------------------
-# CloudFront Function -- Directory Index Rewriting
+# CloudFront Function. Directory Index Rewriting
 #
 # S3 REST API does not serve index.html for key-prefix (directory) requests
 # the way the S3 website endpoint does. This CloudFront Function intercepts
@@ -236,7 +236,7 @@ resource "aws_cloudfront_function" "url_rewrite" {
 }
 
 # ------------------------------------------------------------------------------
-# CloudFront Response Headers Policy -- Security Headers (optional)
+# CloudFront Response Headers Policy. Security Headers (optional)
 # ------------------------------------------------------------------------------
 
 resource "aws_cloudfront_response_headers_policy" "security" {
@@ -388,7 +388,7 @@ resource "aws_wafv2_web_acl" "this" {
     allow {}
   }
 
-  # Rule 0: AWS Common Rule Set -- protects against OWASP Top 10 threats.
+  # Rule 0: AWS Common Rule Set. protects against OWASP Top 10 threats.
   rule {
     name     = "AWSManagedRulesCommonRuleSet"
     priority = 0
@@ -420,7 +420,7 @@ resource "aws_wafv2_web_acl" "this" {
     }
   }
 
-  # Rule 1: Known Bad Inputs -- blocks request patterns known to exploit
+  # Rule 1: Known Bad Inputs. blocks request patterns known to exploit
   # common vulnerabilities such as Log4JRCE and SSRF.
   rule {
     name     = "AWSManagedRulesKnownBadInputsRuleSet"
@@ -451,7 +451,7 @@ resource "aws_wafv2_web_acl" "this" {
     }
   }
 
-  # Rule 2: Rate Limiting -- blocks IPs that exceed waf_rate_limit requests
+  # Rule 2: Rate Limiting. blocks IPs that exceed waf_rate_limit requests
   # in a 5-minute sliding window. Protects against scraping and brute-force.
   rule {
     name     = "RateLimitRule"

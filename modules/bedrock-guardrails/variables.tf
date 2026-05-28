@@ -389,7 +389,7 @@ variable "principal_arns" {
     List of IAM principal ARNs (roles, users, or assumed-role sessions) that
     should be granted permission to invoke Bedrock models with this guardrail.
     The module outputs a rendered IAM policy document JSON that callers can
-    attach to their roles -- no IAM resources are created by this module.
+    attach to their roles. no IAM resources are created by this module.
 
     Leave empty to skip generating the policy document.
   EOT

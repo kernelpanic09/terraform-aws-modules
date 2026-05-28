@@ -93,7 +93,7 @@ module "okta_aws_federation" {
   roles = [
     {
       name        = "admin"
-      description = "Full administrative access -- break-glass and platform engineering"
+      description = "Full administrative access. break-glass and platform engineering"
       policy_arns = ["arn:aws:iam::aws:policy/AdministratorAccess"]
       # Short session for highly privileged access
       # (session_duration is module-level, use inline deny for extra control)
@@ -110,7 +110,7 @@ module "okta_aws_federation" {
     },
     {
       name        = "developer"
-      description = "Developer access -- full compute and storage, no IAM or billing"
+      description = "Developer access. full compute and storage, no IAM or billing"
       policy_arns = [
         "arn:aws:iam::aws:policy/PowerUserAccess",
         "arn:aws:iam::aws:policy/AWSCodeBuildDeveloperAccess",
@@ -145,7 +145,7 @@ module "okta_aws_federation" {
     },
     {
       name        = "readonly"
-      description = "Read-only access across all AWS services -- auditors and on-call"
+      description = "Read-only access across all AWS services. auditors and on-call"
       policy_arns = [
         "arn:aws:iam::aws:policy/ReadOnlyAccess",
         "arn:aws:iam::aws:policy/AWSCloudTrailReadOnlyAccess",
@@ -167,7 +167,7 @@ output "saml_provider_arn" {
 }
 
 output "okta_app_id" {
-  description = "Okta application ID -- used to build the tile URL and configure group rules."
+  description = "Okta application ID. used to build the tile URL and configure group rules."
   value       = module.okta_aws_federation.okta_app_id
 }
 
