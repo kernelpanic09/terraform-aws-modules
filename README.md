@@ -1,5 +1,10 @@
 # terraform-aws-modules
 
+[![License: MIT](https://img.shields.io/github/license/kernelpanic09/terraform-aws-modules)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/kernelpanic09/terraform-aws-modules?include_prereleases&sort=semver)](https://github.com/kernelpanic09/terraform-aws-modules/releases)
+[![Last commit](https://img.shields.io/github/last-commit/kernelpanic09/terraform-aws-modules)](https://github.com/kernelpanic09/terraform-aws-modules/commits)
+[![Modules](https://img.shields.io/badge/modules-18-blue)](modules/)
+
 A collection of opinionated Terraform modules for AWS, built around patterns I've used in real environments. These aren't generic wrappers around AWS resources. Each module captures a specific architecture (multi-region DNS failover, Okta-AWS SAML federation, ephemeral GitHub runner fleets, Bedrock-backed RAG, etc.) with the IAM, encryption, monitoring, and edge-case handling already wired in.
 
 Built against Terraform 1.5+ and AWS Provider 5.x.
