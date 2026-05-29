@@ -1,0 +1,149 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  fmt:
+    name: Terraform format check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.8.5"
+
+      # -check exits non-zero if any file would be reformatted
+      - name: Check formatting in modules/
+        run: terraform fmt -check -recursive modules/
+
+      - name: Check formatting in examples/
+        run: terraform fmt -check -recursive examples/
+
+  validate:
+    name: Validate - ${{ matrix.module }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    strategy:
+      fail-fast: false
+      matrix:
+        module:
+          - ai-gateway
+          - aws-backup
+          - bedrock-guardrails
+          - bedrock-knowledge-base
+          - ecs-fargate
+          - eks-cluster
+          - fargate-cron
+          - github-runner-fleet
+          - iam-roles
+          - identity-center
+          - incident-response
+          - landing-zone
+          - okta-aws-federation
+          - rds-aurora
+          - route53-failover
+          - s3-cloudfront
+          - transit-gateway
+          - vpc
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.8.5"
+
+      # Cache provider downloads keyed by lock file (or module dir if no lock file)
+      - name: Cache Terraform plugins
+        uses: actions/cache@v4
+        with:
+          path: modules/${{ matrix.module }}/.terraform
+          key: tf-plugins-${{ matrix.module }}-${{ hashFiles(format('modules/{0}/.terraform.lock.hcl', matrix.module)) }}
+          restore-keys: |
+            tf-plugins-${{ matrix.module }}-
+
+      - name: terraform init
+        working-directory: modules/${{ matrix.module }}
+        run: terraform init -backend=false
+
+      - name: terraform validate
+        working-directory: modules/${{ matrix.module }}
+        run: terraform validate
+
+  tflint:
+    name: TFLint - ${{ matrix.module }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    strategy:
+      fail-fast: false
+      matrix:
+        module:
+          - ai-gateway
+          - aws-backup
+          - bedrock-guardrails
+          - bedrock-knowledge-base
+          - ecs-fargate
+          - eks-cluster
+          - fargate-cron
+          - github-runner-fleet
+          - iam-roles
+          - identity-center
+          - incident-response
+          - landing-zone
+          - okta-aws-federation
+          - rds-aurora
+          - route53-failover
+          - s3-cloudfront
+          - transit-gateway
+          - vpc
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up TFLint
+        uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: "v0.51.2"
+
+      # Cache tflint plugin downloads
+      - name: Cache TFLint plugins
+        uses: actions/cache@v4
+        with:
+          path: ~/.tflint.d/plugins
+          key: tflint-plugins-${{ runner.os }}-${{ hashFiles('.tflint.hcl') }}
+          restore-keys: |
+            tflint-plugins-${{ runner.os }}-
+
+      - name: Initialize TFLint with AWS plugin
+        working-directory: modules/${{ matrix.module }}
+        run: |
+          # Write a minimal .tflint.hcl if one doesn't exist in the module
+          if [ ! -f .tflint.hcl ]; then
+            cat > .tflint.hcl <<'EOF'
+          plugin "aws" {
+            enabled = true
+            version = "0.32.0"
+            source  = "github.com/terraform-linters/tflint-ruleset-aws"
+          }
+          EOF
+          fi
+          tflint --init
+
+      - name: Run TFLint
+        working-directory: modules/${{ matrix.module }}
+        run: tflint --format compact
