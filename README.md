@@ -74,6 +74,49 @@ module "vpc" {
 
 Each module has its own README with full variable and output documentation. See [examples/](examples/) for complete, runnable configurations.
 
+## Using these modules
+
+Reference any module directly via git source. Replace `vpc` with whichever module you need.
+
+**Pin to a release tag (recommended for production)**
+
+```hcl
+module "vpc" {
+  source = "git::https://github.com/kernelpanic09/terraform-aws-modules.git//modules/vpc?ref=v1.0.0"
+
+  name               = "production"
+  vpc_cidr           = "10.0.0.0/16"
+  az_count           = 3
+  single_nat_gateway = false
+}
+```
+
+**Pin to a specific commit SHA (most strict)**
+
+```hcl
+module "vpc" {
+  source = "git::https://github.com/kernelpanic09/terraform-aws-modules.git//modules/vpc?ref=abc1234"
+
+  # ...
+}
+```
+
+**Track main (only for prototyping)**
+
+```hcl
+module "vpc" {
+  source = "github.com/kernelpanic09/terraform-aws-modules//modules/vpc"
+
+  # ...
+}
+```
+
+Pinning to a tag or SHA matters in practice. Without it, `terraform init -upgrade` can pull in a changed module and produce a different plan than you ran yesterday. Tag-pinned sources give you the same reproducibility the Terraform Registry offers - you just manage the tags yourself.
+
+### Why not the Terraform Registry?
+
+The Terraform Registry requires each module to live in its own repo following the `terraform-<provider>-<name>` naming convention. Publishing 18 modules would mean 18 separate repos. For a collection like this - where the examples deliberately compose multiple modules together - splitting them up adds friction without adding much value. Keeping everything in one repo makes cross-module examples easier to maintain and easier to follow. The git source approach with tag pinning gives you the same version control story the Registry provides.
+
 ## Examples
 
 | Example | Modules Used | Description |
@@ -111,6 +154,9 @@ A few things I try to be consistent about across modules:
 If you want general-purpose, community-maintained modules for common AWS resources (VPC, EKS, RDS, EC2, etc.), go check out the [terraform-aws-modules](https://github.com/terraform-aws-modules) organization. Those are excellent and you should use them as a starting point for most stacks.
 
 This repo intentionally goes the other direction. It's opinionated and focuses on patterns and integrations that aren't well-covered elsewhere: Okta-AWS federation, Identity Center as code, GuardDuty auto-remediation, ephemeral GitHub runner fleets, Bedrock RAG, etc.
+
+- [agents-platform](https://github.com/kernelpanic09/agents-platform) — an example of what gets built on top of these modules: an AI agent orchestration platform that uses `bedrock-knowledge-base` for RAG and `identity-center` for human access.
+- [mcp-server-aws](https://github.com/kernelpanic09/mcp-server-aws) — pairs with the `iam-roles` module to give AI agents safe, scoped read access to AWS without handing them long-lived admin credentials.
 
 ## Requirements
 
