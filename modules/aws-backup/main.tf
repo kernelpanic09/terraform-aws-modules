@@ -8,7 +8,6 @@
 ##############################################################################
 
 data "aws_caller_identity" "current" {}
-data "aws_region" "current" {}
 
 locals {
   account_id = data.aws_caller_identity.current.account_id
@@ -17,16 +16,6 @@ locals {
     ManagedBy = "terraform"
     Module    = "aws-backup"
   })
-
-  # Flatten backup plans + rules for use in for_each maps.
-  # Key format: "<plan_name>/<rule_name>"
-  all_rules = merge([
-    for plan in var.backup_plans : {
-      for rule in plan.rules :
-      "${plan.name}/${rule.name}" => merge(rule, { plan_name = plan.name })
-    }
-  ]...)
-
 }
 
 # ------------------------------------------------------------------------------

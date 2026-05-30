@@ -1,6 +1,5 @@
 data "aws_partition" "current" {}
 data "aws_caller_identity" "current" {}
-data "aws_region" "current" {}
 
 locals {
   account_id  = data.aws_caller_identity.current.account_id
@@ -213,7 +212,9 @@ resource "aws_eks_cluster" "this" {
   }
 
   vpc_config {
-    subnet_ids              = var.subnet_ids
+    # Control-plane ENIs span the private subnets plus any public subnets
+    # supplied for a public endpoint. Node groups still use var.subnet_ids only.
+    subnet_ids              = concat(var.subnet_ids, var.public_subnet_ids)
     endpoint_public_access  = var.endpoint_public_access
     endpoint_private_access = var.endpoint_private_access
     public_access_cidrs     = var.endpoint_public_access ? var.public_access_cidrs : null
