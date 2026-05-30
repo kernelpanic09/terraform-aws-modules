@@ -160,8 +160,8 @@ resource "aws_security_group" "node" {
   vpc_id      = var.vpc_id
 
   tags = merge(local.common_tags, {
-    Name                                            = "${var.cluster_name}-node-sg"
-    "kubernetes.io/cluster/${var.cluster_name}"     = "owned"
+    Name                                        = "${var.cluster_name}-node-sg"
+    "kubernetes.io/cluster/${var.cluster_name}" = "owned"
   })
 }
 
@@ -348,8 +348,8 @@ resource "aws_eks_node_group" "this" {
   tags = merge(local.common_tags, {
     Name = "${var.cluster_name}-${each.value.name}"
     # Required for cluster-autoscaler auto-discovery via autodiscovery tags.
-    "k8s.io/cluster-autoscaler/enabled"                 = "true"
-    "k8s.io/cluster-autoscaler/${var.cluster_name}"     = "owned"
+    "k8s.io/cluster-autoscaler/enabled"             = "true"
+    "k8s.io/cluster-autoscaler/${var.cluster_name}" = "owned"
   })
 
   lifecycle {
@@ -683,7 +683,7 @@ resource "aws_iam_role_policy" "cluster_autoscaler" {
         Resource = "*"
         Condition = {
           StringEquals = {
-            "autoscaling:ResourceTag/k8s.io/cluster-autoscaler/enabled" = "true"
+            "autoscaling:ResourceTag/k8s.io/cluster-autoscaler/enabled"             = "true"
             "autoscaling:ResourceTag/k8s.io/cluster-autoscaler/${var.cluster_name}" = "owned"
           }
         }

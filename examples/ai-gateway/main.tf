@@ -95,8 +95,8 @@ module "ai_gateway" {
   kms_deletion_window     = 14
 
   tags = {
-    Team        = "platform"
-    CostCenter  = "engineering"
+    Team       = "platform"
+    CostCenter = "engineering"
   }
 }
 

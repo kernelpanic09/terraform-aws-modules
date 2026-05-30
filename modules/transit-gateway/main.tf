@@ -10,9 +10,9 @@ locals {
   propagation_pairs = flatten([
     for att in var.vpc_attachments : [
       for rt_name in att.route_table_propagations : {
-        key          = "${att.name}:${rt_name}"
-        att_name     = att.name
-        rt_name      = rt_name
+        key      = "${att.name}:${rt_name}"
+        att_name = att.name
+        rt_name  = rt_name
       }
     ]
   ])
@@ -47,11 +47,11 @@ locals {
 resource "aws_ec2_transit_gateway" "this" {
   description = "${var.name} transit gateway"
 
-  amazon_side_asn                 = var.amazon_side_asn
-  dns_support                     = "enable"
-  vpn_ecmp_support                = "enable"
-  multicast_support               = var.enable_multicast ? "enable" : "disable"
-  auto_accept_shared_attachments  = var.auto_accept_shared_attachments ? "enable" : "disable"
+  amazon_side_asn                = var.amazon_side_asn
+  dns_support                    = "enable"
+  vpn_ecmp_support               = "enable"
+  multicast_support              = var.enable_multicast ? "enable" : "disable"
+  auto_accept_shared_attachments = var.auto_accept_shared_attachments ? "enable" : "disable"
 
   # We manage all route table associations and propagations explicitly, so we
   # disable the default behaviour that auto-associates every attachment.
@@ -88,9 +88,9 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "this" {
   vpc_id             = each.value.vpc_id
   subnet_ids         = each.value.subnet_ids
 
-  dns_support                                 = each.value.dns_support ? "enable" : "disable"
-  ipv6_support                                = each.value.ipv6_support ? "enable" : "disable"
-  appliance_mode_support                      = each.value.appliance_mode_support ? "enable" : "disable"
+  dns_support                                     = each.value.dns_support ? "enable" : "disable"
+  ipv6_support                                    = each.value.ipv6_support ? "enable" : "disable"
+  appliance_mode_support                          = each.value.appliance_mode_support ? "enable" : "disable"
   transit_gateway_default_route_table_association = false
   transit_gateway_default_route_table_propagation = false
 

@@ -36,7 +36,7 @@ locals {
       value        = "1000" # log queries slower than 1 s
       apply_method = "immediate"
     }
-    rds.force_ssl = {
+    "rds.force_ssl" = {
       value        = "1"
       apply_method = "immediate"
     }
@@ -230,10 +230,10 @@ resource "aws_lambda_function" "rotation" {
 resource "aws_lambda_permission" "rotation_allow_sm" {
   count = var.enable_secrets_manager && var.enable_rotation ? 1 : 0
 
-  statement_id  = "AllowSecretsManagerInvoke"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.rotation[0].function_name
-  principal     = "secretsmanager.amazonaws.com"
+  statement_id   = "AllowSecretsManagerInvoke"
+  action         = "lambda:InvokeFunction"
+  function_name  = aws_lambda_function.rotation[0].function_name
+  principal      = "secretsmanager.amazonaws.com"
   source_account = data.aws_caller_identity.current.account_id
 }
 
@@ -396,8 +396,8 @@ resource "aws_rds_cluster" "this" {
   preferred_backup_window      = var.preferred_backup_window
   preferred_maintenance_window = var.preferred_maintenance_window
 
-  deletion_protection     = var.deletion_protection
-  skip_final_snapshot     = var.skip_final_snapshot
+  deletion_protection       = var.deletion_protection
+  skip_final_snapshot       = var.skip_final_snapshot
   final_snapshot_identifier = var.skip_final_snapshot ? null : "${var.name}-final-${formatdate("YYYYMMDD-HHmmss", timestamp())}"
 
   enabled_cloudwatch_logs_exports = local.logs_exports
@@ -437,10 +437,10 @@ resource "aws_rds_cluster_instance" "this" {
   performance_insights_kms_key_id       = var.enable_performance_insights ? local.kms_key_id : null
   performance_insights_retention_period = var.enable_performance_insights ? var.performance_insights_retention_days : null
 
-  apply_immediately            = false
-  auto_minor_version_upgrade   = true
-  copy_tags_to_snapshot        = true
-  publicly_accessible          = false
+  apply_immediately          = false
+  auto_minor_version_upgrade = true
+  copy_tags_to_snapshot      = true
+  publicly_accessible        = false
 
   tags = merge(var.tags, {
     Name = local.instance_ids[count.index]
@@ -530,8 +530,8 @@ resource "aws_rds_cluster" "replica" {
   storage_encrypted = true
   kms_key_id        = local.kms_key_id
 
-  deletion_protection  = var.deletion_protection
-  skip_final_snapshot  = var.skip_final_snapshot
+  deletion_protection = var.deletion_protection
+  skip_final_snapshot = var.skip_final_snapshot
 
   enabled_cloudwatch_logs_exports = local.logs_exports
 

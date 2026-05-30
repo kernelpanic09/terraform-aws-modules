@@ -83,8 +83,8 @@ resource "aws_route53_health_check" "secondary" {
 resource "aws_route53_health_check" "calculated" {
   count = var.enable_calculated_health_check ? 1 : 0
 
-  type             = "CALCULATED"
-  health_threshold = var.calculated_health_check_threshold
+  type                   = "CALCULATED"
+  child_health_threshold = var.calculated_health_check_threshold
 
   child_healthchecks = [
     aws_route53_health_check.primary.id,

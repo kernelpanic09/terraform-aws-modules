@@ -35,5 +35,5 @@ output "okta_group_names" {
 
 output "saml_login_url" {
   description = "Okta sign-in URL for the AWS SAML application. Users navigate here to initiate federated sign-in."
-  value       = okta_app_saml.aws.sign_on_url
+  value       = okta_app_saml.aws.sso_url
 }

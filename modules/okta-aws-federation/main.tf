@@ -41,7 +41,7 @@ resource "okta_app_saml" "aws" {
   }
 
   lifecycle {
-    ignore_changes = [groups]
+    ignore_changes = [key_years_valid]
   }
 }
 

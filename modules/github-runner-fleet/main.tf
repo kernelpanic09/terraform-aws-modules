@@ -281,12 +281,12 @@ resource "aws_ecs_task_definition" "runner" {
       essential = true
 
       environment = [
-        { name = "RUNNER_SCOPE",        value = local.runner_scope },
-        { name = "ORG_NAME",            value = var.organization },
-        { name = "REPO_URL",            value = local.repo_url },
-        { name = "RUNNER_LABELS",       value = local.runner_labels_str },
-        { name = "RUNNER_GROUP",        value = var.runner_group },
-        { name = "EPHEMERAL",           value = "1" },
+        { name = "RUNNER_SCOPE", value = local.runner_scope },
+        { name = "ORG_NAME", value = var.organization },
+        { name = "REPO_URL", value = local.repo_url },
+        { name = "RUNNER_LABELS", value = local.runner_labels_str },
+        { name = "RUNNER_GROUP", value = var.runner_group },
+        { name = "EPHEMERAL", value = "1" },
         { name = "DISABLE_AUTO_UPDATE", value = "1" },
       ]
 

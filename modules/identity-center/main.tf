@@ -27,10 +27,10 @@ locals {
   account_assignments = flatten([
     for assignment in var.account_assignments : [
       for account_id in assignment.account_ids : {
-        key             = "${assignment.group_name}-${assignment.permission_set_name}-${account_id}"
-        group_name      = assignment.group_name
-        permission_set  = assignment.permission_set_name
-        account_id      = account_id
+        key            = "${assignment.group_name}-${assignment.permission_set_name}-${account_id}"
+        group_name     = assignment.group_name
+        permission_set = assignment.permission_set_name
+        account_id     = account_id
       }
     ]
   ])

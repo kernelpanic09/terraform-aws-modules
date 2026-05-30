@@ -409,8 +409,8 @@ resource "aws_cloudwatch_event_rule" "task_failure" {
     source      = ["aws.ecs"]
     detail-type = ["ECS Task State Change"]
     detail = {
-      lastStatus    = ["STOPPED"]
-      stoppedReason = [{ prefix = "Essential container in task exited" }]
+      lastStatus        = ["STOPPED"]
+      stoppedReason     = [{ prefix = "Essential container in task exited" }]
       taskDefinitionArn = [{ prefix = "arn:aws:ecs" }]
       # Filter to tasks from this task definition family.
       group = [{ prefix = "family:${var.name}" }]

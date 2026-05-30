@@ -119,22 +119,22 @@ module "production_guardrail" {
   pii_entities = [
     # Credentials. always block
     { type = "US_SOCIAL_SECURITY_NUMBER", action = "BLOCK" },
-    { type = "CREDIT_DEBIT_CARD_NUMBER",  action = "BLOCK" },
-    { type = "CREDIT_DEBIT_CARD_CVV",     action = "BLOCK" },
-    { type = "CREDIT_DEBIT_CARD_EXPIRY",  action = "BLOCK" },
-    { type = "AWS_ACCESS_KEY",            action = "BLOCK" },
-    { type = "AWS_SECRET_KEY",            action = "BLOCK" },
-    { type = "PASSWORD",                  action = "BLOCK" },
-    { type = "PIN",                       action = "BLOCK" },
+    { type = "CREDIT_DEBIT_CARD_NUMBER", action = "BLOCK" },
+    { type = "CREDIT_DEBIT_CARD_CVV", action = "BLOCK" },
+    { type = "CREDIT_DEBIT_CARD_EXPIRY", action = "BLOCK" },
+    { type = "AWS_ACCESS_KEY", action = "BLOCK" },
+    { type = "AWS_SECRET_KEY", action = "BLOCK" },
+    { type = "PASSWORD", action = "BLOCK" },
+    { type = "PIN", action = "BLOCK" },
 
     # Contact and identity. anonymize
-    { type = "NAME",  action = "ANONYMIZE" },
+    { type = "NAME", action = "ANONYMIZE" },
     { type = "EMAIL", action = "ANONYMIZE" },
     { type = "PHONE", action = "ANONYMIZE" },
 
     # Additional financial identifiers. anonymize
-    { type = "US_BANK_ACCOUNT_NUMBER",    action = "ANONYMIZE" },
-    { type = "US_BANK_ROUTING_NUMBER",    action = "ANONYMIZE" },
+    { type = "US_BANK_ACCOUNT_NUMBER", action = "ANONYMIZE" },
+    { type = "US_BANK_ROUTING_NUMBER", action = "ANONYMIZE" },
     { type = "INTERNATIONAL_BANK_ACCOUNT_NUMBER", action = "ANONYMIZE" },
   ]
 

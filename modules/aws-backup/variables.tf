@@ -49,8 +49,8 @@ variable "replica_region" {
   default     = ""
 
   validation {
-    condition     = var.enable_cross_region_copy ? length(var.replica_region) > 0 : true
-    error_message = "replica_region must be specified when enable_cross_region_copy is true."
+    condition     = var.replica_region == "" || can(regex("^[a-z]{2}-[a-z]+-[0-9]+$", var.replica_region))
+    error_message = "replica_region must be a valid AWS region name (e.g. us-east-1) or empty string."
   }
 }
 

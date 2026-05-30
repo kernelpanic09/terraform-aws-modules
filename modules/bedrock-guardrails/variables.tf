@@ -243,8 +243,8 @@ variable "word_filters" {
     performed as whole-word or phrase matching. Include terms specific to your
     organization that should never appear in AI inputs or outputs.
   EOT
-  type    = list(string)
-  default = []
+  type        = list(string)
+  default     = []
 
   validation {
     condition = alltrue([
@@ -318,8 +318,8 @@ variable "blocked_input_messaging" {
     Keep this message clear and non-technical so users understand why the
     request was rejected without exposing internal policy details.
   EOT
-  type    = string
-  default = "Your request contains content that cannot be processed. Please revise your input and try again."
+  type        = string
+  default     = "Your request contains content that cannot be processed. Please revise your input and try again."
 
   validation {
     condition     = length(var.blocked_input_messaging) >= 1 && length(var.blocked_input_messaging) <= 500
@@ -333,8 +333,8 @@ variable "blocked_outputs_messaging" {
     Keep this message clear and non-technical so users understand why the
     response was withheld without exposing internal policy details.
   EOT
-  type    = string
-  default = "The response was blocked because it contains content that cannot be shown. Please rephrase your question."
+  type        = string
+  default     = "The response was blocked because it contains content that cannot be shown. Please rephrase your question."
 
   validation {
     condition     = length(var.blocked_outputs_messaging) >= 1 && length(var.blocked_outputs_messaging) <= 500
@@ -353,8 +353,8 @@ variable "kms_key_arn" {
     and kms:GenerateDataKey permissions. Leave null to use the default
     AWS-managed key for Bedrock.
   EOT
-  type    = string
-  default = null
+  type        = string
+  default     = null
 
   validation {
     condition = (
@@ -376,8 +376,8 @@ variable "enable_versioning" {
     ARN in production to ensure deterministic behaviour even if the DRAFT is
     later modified.
   EOT
-  type    = bool
-  default = true
+  type        = bool
+  default     = true
 }
 
 # ---------------------------------------------------------------------------
@@ -393,8 +393,8 @@ variable "principal_arns" {
 
     Leave empty to skip generating the policy document.
   EOT
-  type    = list(string)
-  default = []
+  type        = list(string)
+  default     = []
 
   validation {
     condition = alltrue([

@@ -513,9 +513,9 @@ resource "null_resource" "vector_index" {
 
       # Resolve AWS credentials: prefer environment variables (IAM roles, ECS tasks,
       # CodeBuild, etc.) then fall back to configured profile credentials.
-      ACCESS_KEY="${AWS_ACCESS_KEY_ID:-$(aws configure get aws_access_key_id 2>/dev/null || echo "")}"
-      SECRET_KEY="${AWS_SECRET_ACCESS_KEY:-$(aws configure get aws_secret_access_key 2>/dev/null || echo "")}"
-      SESSION_TOKEN="${AWS_SESSION_TOKEN:-$(aws configure get aws_session_token 2>/dev/null || echo "")}"
+      ACCESS_KEY="$${AWS_ACCESS_KEY_ID:-$(aws configure get aws_access_key_id 2>/dev/null || echo "")}"
+      SECRET_KEY="$${AWS_SECRET_ACCESS_KEY:-$(aws configure get aws_secret_access_key 2>/dev/null || echo "")}"
+      SESSION_TOKEN="$${AWS_SESSION_TOKEN:-$(aws configure get aws_session_token 2>/dev/null || echo "")}"
 
       if [ -z "$ACCESS_KEY" ] || [ -z "$SECRET_KEY" ]; then
         echo "ERROR: Could not resolve AWS credentials. Set AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY or configure the AWS CLI." >&2
@@ -680,9 +680,9 @@ resource "aws_bedrockagent_knowledge_base" "this" {
 # ============================================================
 
 resource "aws_bedrockagent_data_source" "s3" {
-  name             = "${var.name}-s3-source"
+  name              = "${var.name}-s3-source"
   knowledge_base_id = aws_bedrockagent_knowledge_base.this.id
-  description      = "S3 data source for ${var.name} knowledge base"
+  description       = "S3 data source for ${var.name} knowledge base"
 
   data_source_configuration {
     type = "S3"
@@ -716,9 +716,9 @@ resource "aws_bedrockagent_data_source" "s3" {
 resource "aws_sqs_queue" "lambda_dlq" {
   count = var.enable_auto_ingestion ? 1 : 0
 
-  name                       = "${var.name}-ingestion-dlq"
-  message_retention_seconds  = 1209600 # 14 days
-  kms_master_key_id          = var.kms_key_arn != null ? var.kms_key_arn : "alias/aws/sqs"
+  name                      = "${var.name}-ingestion-dlq"
+  message_retention_seconds = 1209600 # 14 days
+  kms_master_key_id         = var.kms_key_arn != null ? var.kms_key_arn : "alias/aws/sqs"
 
   tags = local.common_tags
 }
@@ -798,8 +798,8 @@ data "aws_iam_policy_document" "lambda_permissions" {
     # count is zero (data sources are always evaluated regardless of count).
     resources = [
       length(aws_sqs_queue.lambda_dlq) > 0
-        ? aws_sqs_queue.lambda_dlq[0].arn
-        : "arn:${local.partition}:sqs:${local.region}:${local.account_id}:${var.name}-ingestion-dlq"
+      ? aws_sqs_queue.lambda_dlq[0].arn
+      : "arn:${local.partition}:sqs:${local.region}:${local.account_id}:${var.name}-ingestion-dlq"
     ]
   }
 

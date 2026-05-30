@@ -135,9 +135,9 @@ resource "aws_iam_role_policy" "task_baseline" {
         Resource = "*"
       },
       {
-        Sid    = "AllowCloudWatchMetrics"
-        Effect = "Allow"
-        Action = ["cloudwatch:PutMetricData"]
+        Sid      = "AllowCloudWatchMetrics"
+        Effect   = "Allow"
+        Action   = ["cloudwatch:PutMetricData"]
         Resource = "*"
       }
     ]

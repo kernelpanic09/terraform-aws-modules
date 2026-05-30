@@ -129,9 +129,9 @@ output "lambda_log_group_name" {
 output "retrieve_and_generate_config" {
   description = "Convenience map containing the IDs needed to call Bedrock RetrieveAndGenerate or Retrieve APIs."
   value = {
-    knowledge_base_id  = aws_bedrockagent_knowledge_base.this.id
-    data_source_id     = aws_bedrockagent_data_source.s3.data_source_id
-    embedding_model    = var.embedding_model
-    vector_index_name  = local.vector_index_name
+    knowledge_base_id = aws_bedrockagent_knowledge_base.this.id
+    data_source_id    = aws_bedrockagent_data_source.s3.data_source_id
+    embedding_model   = var.embedding_model
+    vector_index_name = local.vector_index_name
   }
 }

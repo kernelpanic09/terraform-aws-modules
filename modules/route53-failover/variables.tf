@@ -62,12 +62,12 @@ variable "enable_ipv6" {
 variable "primary_endpoint" {
   description = "Configuration for the primary (active) endpoint."
   type = object({
-    address       = string           # IP address or hostname for the health check source IP
-    type          = string           # HTTP | HTTPS | HTTPS_STR_MATCH | HTTP_STR_MATCH | TCP
-    port          = number           # TCP port (80, 443, etc.)
+    address       = string # IP address or hostname for the health check source IP
+    type          = string # HTTP | HTTPS | HTTPS_STR_MATCH | HTTP_STR_MATCH | TCP
+    port          = number # TCP port (80, 443, etc.)
     path          = optional(string, "/health")
-    search_string = optional(string, null)  # required when type contains STR_MATCH
-    fqdn          = optional(string, null)  # when set, Route53 uses FQDN and sends SNI; address is still used as the record value
+    search_string = optional(string, null) # required when type contains STR_MATCH
+    fqdn          = optional(string, null) # when set, Route53 uses FQDN and sends SNI; address is still used as the record value
   })
 
   validation {

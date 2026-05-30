@@ -6,15 +6,15 @@ locals {
   prefix = var.name
 
   common_tags = merge(var.tags, {
-    Module  = "ai-gateway"
+    Module    = "ai-gateway"
     ManagedBy = "Terraform"
   })
 
-  model_chain     = concat([var.primary_model], var.fallback_models)
-  fallback_json   = jsonencode(var.fallback_models)
+  model_chain   = concat([var.primary_model], var.fallback_models)
+  fallback_json = jsonencode(var.fallback_models)
 
   # Lambda source: zip the handler.py file
-  lambda_src_dir  = "${path.module}/lambda"
+  lambda_src_dir = "${path.module}/lambda"
 }
 
 # ============================================================
@@ -106,10 +106,10 @@ resource "aws_dynamodb_table" "cost_log" {
   }
 
   global_secondary_index {
-    name               = "api-key-time-index"
-    hash_key           = "api_key"
-    range_key          = "timestamp"
-    projection_type    = "ALL"
+    name            = "api-key-time-index"
+    hash_key        = "api_key"
+    range_key       = "timestamp"
+    projection_type = "ALL"
   }
 
   ttl {
@@ -321,16 +321,16 @@ resource "aws_lambda_function" "proxy" {
 
   environment {
     variables = {
-      TABLE_API_KEYS      = aws_dynamodb_table.api_keys.name
-      TABLE_RATE          = aws_dynamodb_table.rate_counter.name
-      TABLE_COST_LOG      = aws_dynamodb_table.cost_log.name
-      TABLE_CACHE         = aws_dynamodb_table.prompt_cache.name
-      PRIMARY_MODEL       = var.primary_model
-      FALLBACK_MODELS     = local.fallback_json
-      ENABLE_CACHING      = tostring(var.enable_caching)
-      CACHE_TTL_SECONDS   = tostring(var.cache_ttl_seconds)
-      COST_LOG_TTL_DAYS   = tostring(var.cost_log_retention_days)
-      METRIC_NAMESPACE    = "${local.prefix}/AIGateway"
+      TABLE_API_KEYS    = aws_dynamodb_table.api_keys.name
+      TABLE_RATE        = aws_dynamodb_table.rate_counter.name
+      TABLE_COST_LOG    = aws_dynamodb_table.cost_log.name
+      TABLE_CACHE       = aws_dynamodb_table.prompt_cache.name
+      PRIMARY_MODEL     = var.primary_model
+      FALLBACK_MODELS   = local.fallback_json
+      ENABLE_CACHING    = tostring(var.enable_caching)
+      CACHE_TTL_SECONDS = tostring(var.cache_ttl_seconds)
+      COST_LOG_TTL_DAYS = tostring(var.cost_log_retention_days)
+      METRIC_NAMESPACE  = "${local.prefix}/AIGateway"
     }
   }
 
@@ -452,10 +452,10 @@ resource "aws_apigatewayv2_api" "main" {
   description   = "OpenAI-compatible AI Gateway backed by AWS Bedrock"
 
   cors_configuration {
-    allow_headers  = ["Authorization", "Content-Type", "X-Api-Key"]
-    allow_methods  = ["POST", "GET", "OPTIONS"]
-    allow_origins  = ["*"]
-    max_age        = 300
+    allow_headers = ["Authorization", "Content-Type", "X-Api-Key"]
+    allow_methods = ["POST", "GET", "OPTIONS"]
+    allow_origins = ["*"]
+    max_age       = 300
   }
 
   tags = local.common_tags
@@ -468,6 +468,7 @@ resource "aws_apigatewayv2_stage" "default" {
 
   access_log_settings {
     destination_arn = aws_cloudwatch_log_group.apigw.arn
+    format          = "$context.requestId $context.status $context.error.message"
   }
 
   default_route_settings {
@@ -521,13 +522,13 @@ resource "aws_apigatewayv2_route" "health" {
 
 # Custom authorizer
 resource "aws_apigatewayv2_authorizer" "main" {
-  api_id                            = aws_apigatewayv2_api.main.id
-  authorizer_type                   = "REQUEST"
-  authorizer_uri                    = aws_lambda_function.authorizer.invoke_arn
-  identity_sources                  = ["$request.header.Authorization", "$request.header.X-Api-Key"]
-  name                              = "${local.prefix}-authorizer"
-  authorizer_result_ttl_in_seconds  = 0  # no caching of auth results. enforce fresh checks
-  enable_simple_responses           = false
+  api_id                           = aws_apigatewayv2_api.main.id
+  authorizer_type                  = "REQUEST"
+  authorizer_uri                   = aws_lambda_function.authorizer.invoke_arn
+  identity_sources                 = ["$request.header.Authorization", "$request.header.X-Api-Key"]
+  name                             = "${local.prefix}-authorizer"
+  authorizer_result_ttl_in_seconds = 0 # no caching of auth results. enforce fresh checks
+  enable_simple_responses          = false
 }
 
 # Lambda permissions for API Gateway
@@ -931,15 +932,3 @@ resource "aws_cloudwatch_dashboard" "main" {
 # ============================================================
 data "aws_region" "current" {}
 data "aws_caller_identity" "current" {}
-
-# ============================================================
-# Terraform provider for local_file (authorizer inline)
-# ============================================================
-terraform {
-  required_providers {
-    local = {
-      source  = "hashicorp/local"
-      version = ">= 2.4.0"
-    }
-  }
-}

@@ -85,7 +85,7 @@ module "vpc" {
   name               = var.app_name
   vpc_cidr           = "10.0.0.0/16"
   az_count           = 3
-  single_nat_gateway = true  # Single NAT for cost savings in non-prod.
+  single_nat_gateway = true # Single NAT for cost savings in non-prod.
   enable_flow_logs   = true
 
   tags = {

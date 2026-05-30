@@ -147,7 +147,7 @@ module "api_failover" {
   domain_name    = var.domain_name
   hosted_zone_id = var.hosted_zone_id
   record_name    = var.record_name
-  record_ttl     = 30   # low TTL for fast client-side propagation
+  record_ttl     = 30 # low TTL for fast client-side propagation
 
   # Health check tuning
   # request_interval = 10 gives ~90s worst-case failover; costs $1/month extra per check.
@@ -185,8 +185,8 @@ module "api_failover" {
   }
 
   # Alarm configuration
-  enable_alarms          = true
-  alarm_emails           = var.alarm_emails
+  enable_alarms            = true
+  alarm_emails             = var.alarm_emails
   alarm_evaluation_periods = 2
 
   # Composite alarm fires only when BOTH endpoints are down (total outage).
@@ -200,7 +200,7 @@ module "api_failover" {
   # Calculated health check: aggregates both endpoint checks into one.
   # Useful for attaching to dashboards or other automation.
   enable_calculated_health_check    = true
-  calculated_health_check_threshold = 1   # healthy if at least 1 of 2 endpoints is up
+  calculated_health_check_threshold = 1 # healthy if at least 1 of 2 endpoints is up
 
   tags = {
     Environment = var.environment

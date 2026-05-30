@@ -37,8 +37,8 @@ module "incident_response" {
 
   # GuardDuty data sources
   enable_s3_protection      = true
-  enable_k8s_protection     = true   # set false if you do not run EKS
-  enable_malware_protection = false  # incurs per-GB EBS scan cost; enable with caution
+  enable_k8s_protection     = true  # set false if you do not run EKS
+  enable_malware_protection = false # incurs per-GB EBS scan cost; enable with caution
 
   # Compliance aggregation
   enable_security_hub = true
