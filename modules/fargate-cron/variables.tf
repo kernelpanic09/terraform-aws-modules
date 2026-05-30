@@ -122,12 +122,6 @@ variable "schedule_expression" {
   }
 }
 
-variable "schedule_timezone" {
-  description = "IANA timezone for the EventBridge schedule. Only applies to EventBridge Scheduler (not classic EventBridge rules). Defaults to UTC."
-  type        = string
-  default     = "UTC"
-}
-
 variable "max_retry_attempts" {
   description = "Number of times EventBridge retries a failed invocation. 0 means no retries."
   type        = number

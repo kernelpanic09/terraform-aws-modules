@@ -542,7 +542,10 @@ resource "aws_rds_cluster" "replica" {
     ignore_changes = [replication_source_identifier]
   }
 
-  tags = merge(var.tags, { Name = "${var.name}-replica" })
+  tags = merge(var.tags, {
+    Name   = "${var.name}-replica"
+    Region = var.replica_region
+  })
 }
 
 resource "aws_rds_cluster_instance" "replica" {

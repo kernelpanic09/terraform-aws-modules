@@ -3,10 +3,6 @@
 # ---------------------------------------------------------------------------
 
 locals {
-  # Pull the cluster name out of the ARN for resource naming and policy scoping.
-  # ARN format: arn:aws:ecs:region:account:cluster/name
-  cluster_name = element(split("/", var.cluster_arn), length(split("/", var.cluster_arn)) - 1)
-
   # Build the secrets block for the container definition.
   secrets = [
     for env_name, ssm_arn in var.ssm_secrets : {

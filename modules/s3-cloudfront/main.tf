@@ -1,6 +1,3 @@
-data "aws_caller_identity" "current" {}
-data "aws_partition" "current" {}
-
 locals {
   common_tags = merge(var.tags, {
     ManagedBy = "terraform"
@@ -24,8 +21,6 @@ locals {
     minimum_protocol_version = "TLSv1.2_2021"
   }
 
-  # WAF rule action string is derived from the waf_block_mode toggle.
-  waf_override_action = var.waf_block_mode ? "none" : "count"
 }
 
 # ------------------------------------------------------------------------------

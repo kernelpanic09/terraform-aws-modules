@@ -1,8 +1,5 @@
 data "aws_caller_identity" "current" {}
-data "aws_partition" "current" {}
-
 locals {
-  account_id  = data.aws_caller_identity.current.account_id
   common_tags = merge(var.tags, { ManagedBy = "terraform", Module = "okta-aws-federation" })
 
   role_definitions = { for r in var.roles : r.name => r }

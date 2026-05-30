@@ -81,7 +81,6 @@ module "ai_gateway" {
   ]
 
   # Alarm thresholds
-  budget_alarm_threshold_pct     = 80
   error_rate_alarm_threshold_pct = 5
   throttle_alarm_threshold       = 20
 

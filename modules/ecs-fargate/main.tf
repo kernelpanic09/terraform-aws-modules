@@ -19,10 +19,6 @@ locals {
   # SSM parameter ARNs for the execution role policy.
   ssm_arns = values(var.ssm_secrets)
 
-  # When HTTPS is enabled the ALB listener forwards on 443 and the HTTP
-  # listener issues a 301 redirect. When HTTPS is disabled HTTP forwards
-  # directly to the target group.
-  alb_target_port = var.container_port
 }
 
 # ------------------------------------------------------------------------------

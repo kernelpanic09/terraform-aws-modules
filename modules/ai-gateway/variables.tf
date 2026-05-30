@@ -125,17 +125,6 @@ variable "cost_log_retention_days" {
   }
 }
 
-variable "budget_alarm_threshold_pct" {
-  description = "Percentage of monthly budget consumed before triggering an alarm (0-100)."
-  type        = number
-  default     = 80
-
-  validation {
-    condition     = var.budget_alarm_threshold_pct > 0 && var.budget_alarm_threshold_pct <= 100
-    error_message = "budget_alarm_threshold_pct must be between 1 and 100."
-  }
-}
-
 variable "error_rate_alarm_threshold_pct" {
   description = "Error rate percentage threshold to trigger the high error rate alarm."
   type        = number

@@ -83,7 +83,6 @@ module "nightly_backup" {
   # EventBridge cron uses a 6-field format: min hour dom month dow year
   # The ? means "no specific value" - required when you specify the other of dom/dow.
   schedule_expression = "cron(0 2 * * ? *)"
-  schedule_timezone   = "UTC"
 
   # Don't retry on failure - if the backup script failed we want to know
   # immediately rather than running it multiple times and potentially

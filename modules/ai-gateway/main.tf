@@ -359,7 +359,6 @@ resource "aws_cloudwatch_log_group" "authorizer" {
 # Inline authorizer: validates key and returns IAM policy
 # Packaged from the same source dir. handler_authorizer.py
 locals {
-  authorizer_src = "${path.module}/lambda/authorizer"
 }
 
 resource "local_file" "authorizer_handler" {
@@ -931,4 +930,3 @@ resource "aws_cloudwatch_dashboard" "main" {
 # Data sources
 # ============================================================
 data "aws_region" "current" {}
-data "aws_caller_identity" "current" {}

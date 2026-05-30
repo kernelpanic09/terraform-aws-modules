@@ -36,7 +36,6 @@ locals {
 # Data: current account/partition for constructing ARNs
 ###############################################################################
 
-data "aws_caller_identity" "current" {}
 data "aws_partition" "current" {}
 
 ###############################################################################

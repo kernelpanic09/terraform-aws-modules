@@ -105,7 +105,7 @@ resource "aws_route53_health_check" "calculated" {
 resource "aws_route53_record" "primary_a" {
   zone_id        = var.hosted_zone_id
   name           = var.record_name
-  type           = "A"
+  type           = var.record_type
   ttl            = var.record_ttl
   records        = [var.primary_endpoint.address]
   set_identifier = "primary"
@@ -121,7 +121,7 @@ resource "aws_route53_record" "primary_a" {
 resource "aws_route53_record" "secondary_a" {
   zone_id        = var.hosted_zone_id
   name           = var.record_name
-  type           = "A"
+  type           = var.record_type
   ttl            = var.record_ttl
   records        = [var.secondary_endpoint.address]
   set_identifier = "secondary"

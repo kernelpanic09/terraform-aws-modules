@@ -6,7 +6,6 @@ locals {
   account_id  = data.aws_caller_identity.current.account_id
   partition   = data.aws_partition.current.partition
   dns_suffix  = data.aws_partition.current.dns_suffix
-  region      = data.aws_region.current.name
   common_tags = merge(var.tags, { ManagedBy = "terraform", Module = "eks-cluster" })
 
   # OIDC issuer without the https:// prefix (used in IAM trust policies)

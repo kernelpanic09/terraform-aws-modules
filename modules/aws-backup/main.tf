@@ -11,9 +11,7 @@ data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 
 locals {
-  account_id     = data.aws_caller_identity.current.account_id
-  primary_region = data.aws_region.current.name
-
+  account_id = data.aws_caller_identity.current.account_id
   # Merge caller-supplied tags with mandatory module-level tags.
   common_tags = merge(var.tags, {
     ManagedBy = "terraform"
@@ -29,11 +27,6 @@ locals {
     }
   ]...)
 
-  # Rules that should copy to the replica vault (only when cross-region enabled).
-  replica_copy_rules = var.enable_cross_region_copy ? {
-    for k, rule in local.all_rules :
-    k => rule if rule.copy_to_replica
-  } : {}
 }
 
 # ------------------------------------------------------------------------------
