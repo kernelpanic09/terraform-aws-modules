@@ -1,5 +1,6 @@
 # terraform-aws-modules
 
+[![CI](https://github.com/kernelpanic09/terraform-aws-modules/actions/workflows/ci.yml/badge.svg)](https://github.com/kernelpanic09/terraform-aws-modules/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/github/license/kernelpanic09/terraform-aws-modules)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/kernelpanic09/terraform-aws-modules?include_prereleases&sort=semver)](https://github.com/kernelpanic09/terraform-aws-modules/releases)
 [![Last commit](https://img.shields.io/github/last-commit/kernelpanic09/terraform-aws-modules)](https://github.com/kernelpanic09/terraform-aws-modules/commits)
