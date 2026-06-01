@@ -59,7 +59,7 @@ locals {
 # ---------------------------------------------------------------------------
 
 module "docs_kb" {
-  source = "../module"
+  source = "../../modules/bedrock-knowledge-base"
 
   # Unique name for this knowledge base and all derived resources.
   # Must be 3-32 characters, lowercase letters, numbers, and hyphens only.

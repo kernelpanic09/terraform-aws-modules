@@ -135,7 +135,7 @@ resource "aws_secretsmanager_secret_version" "webhook_secret" {
 # ---------------------------------------------------------------------------
 
 module "runner_fleet" {
-  source = "../module"
+  source = "../../modules/github-runner-fleet"
 
   name         = var.name
   organization = var.github_org

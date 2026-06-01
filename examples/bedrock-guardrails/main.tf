@@ -72,7 +72,7 @@ locals {
 ###############################################################################
 
 module "production_guardrail" {
-  source = "../module"
+  source = "../../modules/bedrock-guardrails"
 
   name        = "customer-chatbot-production"
   description = "Production guardrail for the customer-facing AI assistant. Enforces content safety, PII protection, and topic restrictions."

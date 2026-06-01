@@ -55,7 +55,7 @@ data "aws_iam_policy" "backup_s3" {
 #
 
 module "nightly_backup" {
-  source = "../module"
+  source = "../../modules/fargate-cron"
 
   name        = "nightly-db-backup"
   cluster_arn = data.aws_ecs_cluster.shared.arn

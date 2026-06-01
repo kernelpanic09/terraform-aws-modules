@@ -55,7 +55,7 @@ provider "aws" {
 # Gateway module
 # ============================================================
 module "ai_gateway" {
-  source = "../module"
+  source = "../../modules/ai-gateway"
 
   name = "acme-ai-gw"
 

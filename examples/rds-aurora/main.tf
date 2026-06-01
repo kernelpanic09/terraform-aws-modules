@@ -109,7 +109,7 @@ locals {
 # ---------------------------------------------------------------------------
 
 module "aurora" {
-  source = "../module"
+  source = "../../modules/rds-aurora"
 
   providers = {
     aws         = aws

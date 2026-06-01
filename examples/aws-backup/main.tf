@@ -59,7 +59,7 @@ provider "aws" {
 # ------------------------------------------------------------------------------
 
 module "backup" {
-  source = "../module"
+  source = "../../modules/aws-backup"
 
   # Pass both providers so the module can create replica-region resources.
   providers = {

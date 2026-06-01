@@ -61,7 +61,7 @@ variable "non_prod_subnet_ids" {
 }
 
 module "tgw" {
-  source = "../module"
+  source = "../../modules/transit-gateway"
 
   name            = "corp-hub"
   amazon_side_asn = 64512

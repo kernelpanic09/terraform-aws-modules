@@ -136,7 +136,7 @@ locals {
 # ---------------------------------------------------------------------------
 
 module "api_failover" {
-  source = "../module"
+  source = "../../modules/route53-failover"
 
   providers = {
     aws           = aws
