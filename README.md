@@ -156,8 +156,8 @@ If you want general-purpose, community-maintained modules for common AWS resourc
 
 This repo intentionally goes the other direction. It's opinionated and focuses on patterns and integrations that aren't well-covered elsewhere: Okta-AWS federation, Identity Center as code, GuardDuty auto-remediation, ephemeral GitHub runner fleets, Bedrock RAG, etc.
 
-- [agents-platform](https://github.com/kernelpanic09/agents-platform) — an example of what gets built on top of these modules: an AI agent orchestration platform that uses `bedrock-knowledge-base` for RAG and `identity-center` for human access.
-- [mcp-server-aws](https://github.com/kernelpanic09/mcp-server-aws) — pairs with the `iam-roles` module to give AI agents safe, scoped read access to AWS without handing them long-lived admin credentials.
+- [agents-platform](https://github.com/kernelpanic09/agents-platform) - an example of what gets built on top of these modules: an AI agent orchestration platform that uses `bedrock-knowledge-base` for RAG and `identity-center` for human access.
+- [mcp-server-aws](https://github.com/kernelpanic09/mcp-server-aws) - pairs with the `iam-roles` module to give AI agents safe, scoped read access to AWS without handing them long-lived admin credentials.
 
 ## Requirements
 
