@@ -158,6 +158,7 @@ This repo intentionally goes the other direction. It's opinionated and focuses o
 
 - [agents-platform](https://github.com/kernelpanic09/agents-platform) - an example of what gets built on top of these modules: an AI agent orchestration platform that uses `bedrock-knowledge-base` for RAG and `identity-center` for human access.
 - [mcp-server-aws](https://github.com/kernelpanic09/mcp-server-aws) - pairs with the `iam-roles` module to give AI agents safe, scoped read access to AWS without handing them long-lived admin credentials.
+- [k8s-ai-operator](https://github.com/kernelpanic09/k8s-ai-operator) - a Kubernetes operator that consumes the IRSA roles these modules provision to expose Bedrock models in-cluster.
 
 ## Requirements
 
