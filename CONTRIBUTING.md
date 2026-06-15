@@ -27,6 +27,7 @@ When adding a new module:
 1. Create `modules/<name>/` with `main.tf`, `variables.tf`, `outputs.tf`, and `README.md`
 2. Add a matching example under `examples/<name>/`
 3. Add a row to the module table in the root `README.md`
+4. Add the module name to the `validate` and `tflint` job matrices in `.github/workflows/ci.yml` (the CI matrix is not auto-discovered, so a module left out of it is never validated or linted)
 
 ## Commit style
 
