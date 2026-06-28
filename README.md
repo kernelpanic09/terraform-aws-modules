@@ -168,9 +168,10 @@ This repo intentionally goes the other direction. It's opinionated and focuses o
 | AWS Provider | >= 5.0 | All modules (bedrock modules require >= 5.50) |
 | Okta Provider | >= 4.0 | okta-aws-federation only |
 | TLS Provider | >= 4.0 | eks-cluster only |
-| Archive Provider | >= 2.0 | incident-response, github-runner-fleet, ai-gateway, bedrock-knowledge-base |
+| Archive Provider | >= 2.0 | incident-response, github-runner-fleet, ai-gateway, bedrock-knowledge-base, rds-aurora |
 | Null Provider | >= 3.2 | bedrock-knowledge-base only |
 | Random Provider | >= 3.5 | ai-gateway, rds-aurora |
+| Local Provider | >= 2.4 | ai-gateway only |
 
 ## Repository Structure
 
