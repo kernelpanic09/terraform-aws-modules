@@ -1,0 +1,31 @@
+# EditorConfig helps keep formatting consistent across editors and IDEs.
+# It complements the `terraform fmt -check` gate in CI by getting editors
+# to produce the canonical style up front, before fmt has a chance to fail.
+# https://editorconfig.org
+
+root = true
+
+# Defaults for every file
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+# Terraform: `terraform fmt` uses 2-space indentation
+[*.{tf,tfvars,hcl}]
+indent_size = 2
+
+# Lambda handlers follow PEP 8 (4-space indentation)
+[*.py]
+indent_size = 4
+
+# Markdown: keep trailing whitespace (two trailing spaces = a hard line break)
+[*.md]
+trim_trailing_whitespace = false
+
+# Makefiles require real tabs
+[Makefile]
+indent_style = tab
