@@ -211,7 +211,7 @@ curl -s -X POST "$ENDPOINT/v1/embeddings" \
   -d '{
     "model": "amazon.titan-embed-text-v2:0",
     "input": "The quick brown fox"
-  }' | jq .choices
+  }' | jq '.data[0].embedding[:5]'
 
 # Health check (no auth required)
 curl -s "$ENDPOINT/health"
