@@ -225,3 +225,108 @@ class TestParseBedrockResponse:
         _, in_tok, out_tok = handler._parse_bedrock_response(model, raw)
         assert in_tok == 0
         assert out_tok == 0
+
+
+# ---------------------------------------------------------------------------
+# check_budget
+# ---------------------------------------------------------------------------
+class TestCheckBudget:
+    def test_no_budget_cap_allows_any_spend(self):
+        # monthly_budget == 0 means unlimited
+        record = {"monthly_budget": 0, "used_this_month": 9999}
+        handler.check_budget("sk-test-1234", record)  # must not raise
+
+    def test_negative_budget_treated_as_no_cap(self):
+        record = {"monthly_budget": -1, "used_this_month": 100}
+        handler.check_budget("sk-test-1234", record)  # must not raise
+
+    def test_missing_budget_fields_treated_as_no_cap(self):
+        handler.check_budget("sk-test-1234", {})  # must not raise
+
+    def test_within_budget_allows_request(self):
+        record = {"monthly_budget": 10.0, "used_this_month": 9.99}
+        handler.check_budget("sk-test-1234", record)  # must not raise
+
+    def test_exactly_at_budget_raises(self):
+        record = {"monthly_budget": 10.0, "used_this_month": 10.0}
+        with pytest.raises(PermissionError, match="exceeded"):
+            handler.check_budget("sk-test-1234", record)
+
+    def test_over_budget_raises(self):
+        record = {"monthly_budget": 5.0, "used_this_month": 7.50}
+        with pytest.raises(PermissionError, match=r"\$5\.00"):
+            handler.check_budget("sk-test-1234", record)
+
+
+# ---------------------------------------------------------------------------
+# _build_embedding_body
+# ---------------------------------------------------------------------------
+class TestBuildEmbeddingBody:
+    def test_titan_embed_uses_inputText(self):
+        ct, body_bytes = handler._build_embedding_body("amazon.titan-embed-text-v2:0", "hello")
+        body = json.loads(body_bytes)
+        assert ct == "application/json"
+        assert body == {"inputText": "hello"}
+
+    def test_cohere_embed_uses_texts_list(self):
+        ct, body_bytes = handler._build_embedding_body("cohere.embed-english-v3", "query text")
+        body = json.loads(body_bytes)
+        assert ct == "application/json"
+        assert body["texts"] == ["query text"]
+        assert body["input_type"] == "search_document"
+
+    def test_unknown_embedding_model_falls_back_to_inputText(self):
+        _, body_bytes = handler._build_embedding_body("custom.embed-model-v1", "test")
+        body = json.loads(body_bytes)
+        assert body == {"inputText": "test"}
+
+
+# ---------------------------------------------------------------------------
+# format_openai_response
+# ---------------------------------------------------------------------------
+class TestFormatOpenaiResponse:
+    def test_response_shape_matches_openai_spec(self):
+        resp = handler.format_openai_response("Hello!", "anthropic.claude-3-haiku-20240307-v1:0", 10, 5, "req123")
+        assert resp["object"] == "chat.completion"
+        assert resp["id"] == "chatcmpl-req123"
+        assert resp["model"] == "anthropic.claude-3-haiku-20240307-v1:0"
+        assert len(resp["choices"]) == 1
+
+    def test_message_content_is_preserved(self):
+        resp = handler.format_openai_response("The answer is 42.", "m", 0, 0, "x")
+        assert resp["choices"][0]["message"]["content"] == "The answer is 42."
+        assert resp["choices"][0]["message"]["role"] == "assistant"
+
+    def test_finish_reason_is_stop(self):
+        resp = handler.format_openai_response("", "m", 0, 0, "x")
+        assert resp["choices"][0]["finish_reason"] == "stop"
+
+    def test_usage_totals_are_correct(self):
+        resp = handler.format_openai_response("hi", "m", 100, 50, "x")
+        assert resp["usage"]["prompt_tokens"] == 100
+        assert resp["usage"]["completion_tokens"] == 50
+        assert resp["usage"]["total_tokens"] == 150
+
+
+# ---------------------------------------------------------------------------
+# format_openai_embedding_response
+# ---------------------------------------------------------------------------
+class TestFormatOpenaiEmbeddingResponse:
+    def test_response_shape_matches_openai_spec(self):
+        vec = [0.1, 0.2, 0.3]
+        resp = handler.format_openai_embedding_response(vec, "amazon.titan-embed-text-v2:0", 8, "emb001")
+        assert resp["object"] == "list"
+        assert resp["model"] == "amazon.titan-embed-text-v2:0"
+        assert len(resp["data"]) == 1
+
+    def test_embedding_vector_is_preserved(self):
+        vec = [0.5, -0.1, 0.9]
+        resp = handler.format_openai_embedding_response(vec, "m", 0, "x")
+        assert resp["data"][0]["embedding"] == vec
+        assert resp["data"][0]["object"] == "embedding"
+        assert resp["data"][0]["index"] == 0
+
+    def test_usage_reflects_input_tokens_only(self):
+        resp = handler.format_openai_embedding_response([], "m", 42, "x")
+        assert resp["usage"]["prompt_tokens"] == 42
+        assert resp["usage"]["total_tokens"] == 42
