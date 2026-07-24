@@ -7,8 +7,7 @@ Verifies HMAC-SHA256 signature, then adjusts ECS service desired_count.
 Environment variables (set by Terraform):
   ECS_CLUSTER        - ECS cluster name
   ECS_SERVICE        - ECS service name
-  MAX_RUNNERS        - Maximum allowed desired_count
-  MIN_RUNNERS        - Minimum desired_count
+  MAX_RUNNERS        - Maximum allowed desired_count (scale-up ceiling)
   WEBHOOK_SECRET_ARN - Secrets Manager ARN for the webhook HMAC secret
 """
 
