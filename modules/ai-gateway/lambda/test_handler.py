@@ -330,3 +330,34 @@ class TestFormatOpenaiEmbeddingResponse:
         resp = handler.format_openai_embedding_response([], "m", 42, "x")
         assert resp["usage"]["prompt_tokens"] == 42
         assert resp["usage"]["total_tokens"] == 42
+
+
+# ---------------------------------------------------------------------------
+# _json_response
+# ---------------------------------------------------------------------------
+class TestJsonResponse:
+    def test_string_body_is_wrapped_in_error_dict(self):
+        resp = handler._json_response(400, "Bad input")
+        body = json.loads(resp["body"])
+        assert body["error"]["message"] == "Bad input"
+        assert body["error"]["type"] == "gateway_error"
+
+    def test_dict_body_is_passed_through(self):
+        payload = {"status": "ok", "items": [1, 2, 3]}
+        resp = handler._json_response(200, payload)
+        assert json.loads(resp["body"]) == payload
+
+    def test_status_code_is_preserved(self):
+        for code in (200, 400, 401, 403, 404, 429, 500, 503):
+            assert handler._json_response(code, {})["statusCode"] == code
+
+    def test_content_type_header_is_always_json(self):
+        for body in ("error string", {"key": "val"}):
+            resp = handler._json_response(200, body)
+            assert resp["headers"]["Content-Type"] == "application/json"
+
+    def test_body_is_always_valid_json_string(self):
+        for body in ("msg", {"a": 1}, {}):
+            resp = handler._json_response(200, body)
+            # must not raise
+            json.loads(resp["body"])
