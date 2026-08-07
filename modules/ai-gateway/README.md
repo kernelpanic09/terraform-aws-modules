@@ -234,7 +234,6 @@ curl -s "$ENDPOINT/health"
 | `lambda_memory_mb` | `number` | `512` | Proxy Lambda memory (128-10240 MB). |
 | `lambda_timeout_seconds` | `number` | `60` | Proxy Lambda timeout (10-900 seconds). |
 | `cost_log_retention_days` | `number` | `90` | DynamoDB cost log record TTL (1-365 days). |
-| `budget_alarm_threshold_pct` | `number` | `80` | Budget alarm at this percentage of monthly_budget. |
 | `error_rate_alarm_threshold_pct` | `number` | `5` | Error rate percentage to trigger alarm. |
 | `throttle_alarm_threshold` | `number` | `10` | Bedrock throttling events per 5 min to trigger alarm. |
 | `tags` | `map(string)` | `{}` | Tags applied to all resources. |
