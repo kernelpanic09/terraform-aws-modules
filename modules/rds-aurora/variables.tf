@@ -5,6 +5,11 @@
 variable "name" {
   description = "Prefix used for all resource names and tags."
   type        = string
+
+  validation {
+    condition     = can(regex("^[a-z][a-z0-9-]{0,48}[a-z0-9]$", var.name))
+    error_message = "name must be 2-50 characters, start with a letter, end with a letter or digit, and contain only lowercase letters, digits, and hyphens."
+  }
 }
 
 variable "tags" {
