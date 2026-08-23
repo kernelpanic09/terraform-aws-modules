@@ -394,7 +394,6 @@ resource "aws_lambda_function" "webhook" {
       ECS_CLUSTER        = aws_ecs_cluster.runners.name
       ECS_SERVICE        = "${var.name}-runners"
       MAX_RUNNERS        = tostring(var.max_runners)
-      MIN_RUNNERS        = tostring(var.min_runners)
       WEBHOOK_SECRET_ARN = var.webhook_secret_arn
     }
   }
