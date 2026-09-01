@@ -98,7 +98,7 @@ rate(1 hour)            - every hour
 rate(7 days)            - every 7 days
 ```
 
-All times in cron expressions are UTC. The `schedule_timezone` variable is stored for documentation purposes but EventBridge classic rules always use UTC. If you need timezone-aware scheduling, use EventBridge Scheduler (a separate AWS service) instead.
+All times in cron expressions are UTC. If you need timezone-aware scheduling, use EventBridge Scheduler (a separate AWS service) instead.
 
 ## Task definition revisions
 
@@ -144,7 +144,6 @@ When `enable_dlq = true`, an SQS queue is created and attached to the EventBridg
 | environment_variables | Plain-text env vars | `map(string)` | `{}` | no |
 | ssm_secrets | Map of env var name to SSM ARN | `map(string)` | `{}` | no |
 | schedule_expression | cron(...) or rate(...) | `string` | | yes |
-| schedule_timezone | IANA timezone (documentation only for classic rules) | `string` | `"UTC"` | no |
 | max_retry_attempts | EventBridge retry count (0-185) | `number` | `0` | no |
 | vpc_id | VPC ID for the security group | `string` | | yes |
 | subnet_ids | Subnet IDs for task networking | `list(string)` | | yes |
