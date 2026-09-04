@@ -23,7 +23,7 @@ Terraform module for an Amazon Aurora cluster (PostgreSQL or MySQL compatible) w
 
 ```hcl
 module "aurora" {
-  source = "../../module"
+  source = "../../modules/rds-aurora"
 
   name           = "myapp-prod"
   engine         = "aurora-postgresql"
